@@ -4,6 +4,7 @@ export type Product = {
   price: number;
   stock: number;
   category: string;
+  code?: string | null;
   image_url: string | null;
   detail: string | null;
   is_featured?: boolean | null;

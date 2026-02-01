@@ -6,6 +6,7 @@ create table if not exists public.products (
   price integer not null,
   stock integer not null default 0,
   category text not null,
+  code text,
   detail text,
   image_url text,
   is_featured boolean default false,

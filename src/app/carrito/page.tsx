@@ -76,13 +76,28 @@ export default function CarritoPage() {
                     key={item.id}
                     className="flex flex-col gap-4 border-b border-[var(--line)] pb-6 last:border-b-0 last:pb-0 md:flex-row md:items-center md:justify-between"
                   >
-                    <div>
-                      <p className="font-[var(--font-display)] text-lg text-[var(--ink)]">
-                        {item.name}
-                      </p>
-                      <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-                        {item.category}
-                      </p>
+                    <div className="flex items-center gap-4">
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt={item.name}
+                          className="h-16 w-16 rounded-[18px] object-cover"
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="flex h-16 w-16 items-center justify-center rounded-[18px] border border-dashed border-[var(--line)] text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
+                          Sin imagen
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-[var(--font-display)] text-lg text-[var(--ink)]">
+                          {item.name}
+                        </p>
+                        <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+                          {item.category}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                       <div className="flex flex-col items-center gap-2">

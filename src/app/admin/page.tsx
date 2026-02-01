@@ -12,6 +12,7 @@ type ProductFormState = {
   price: string;
   stock: string;
   category: string;
+  code: string;
   detail: string;
   image_url: string;
   is_featured: boolean;
@@ -36,6 +37,7 @@ const emptyForm: ProductFormState = {
   price: "",
   stock: "",
   category: "",
+  code: "",
   detail: "",
   image_url: "",
   is_featured: false,
@@ -119,6 +121,7 @@ export default function AdminPage() {
       price: Number(form.price),
       stock: Number(form.stock),
       category: form.category,
+      code: form.code || null,
       detail: form.detail,
       image_url: form.image_url || null,
       is_featured: form.is_featured,
@@ -333,16 +336,30 @@ export default function AdminPage() {
                   className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
                 />
               </div>
-              <input
-                type="text"
-                list="category-options"
-                placeholder="Categoría"
-                value={form.category}
-                onChange={(event) =>
-                  setForm((prev) => ({ ...prev, category: event.target.value }))
-                }
-                className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
-              />
+              <div className="grid gap-4 md:grid-cols-2">
+                <input
+                  type="text"
+                  list="category-options"
+                  placeholder="Categoría"
+                  value={form.category}
+                  onChange={(event) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      category: event.target.value,
+                    }))
+                  }
+                  className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
+                />
+                <input
+                  type="text"
+                  placeholder="Código de producto"
+                  value={form.code}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, code: event.target.value }))
+                  }
+                  className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
+                />
+              </div>
               <datalist id="category-options">
                 {categoryOptions.map((option) => (
                   <option key={option} value={option} />
@@ -462,21 +479,41 @@ export default function AdminPage() {
                   className="flex flex-col gap-3 border-b border-[var(--line)] pb-4 last:border-b-0 last:pb-0"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-[var(--font-display)] text-lg text-[var(--ink)]">
-                        {product.name}
-                      </p>
-                      <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-                        {product.category}
-                      </p>
-                      {product.created_at && (
-                        <p className="mt-1 text-xs text-[var(--muted)]">
-                          Subido:{" "}
-                          {new Date(product.created_at).toLocaleDateString(
-                            "es-CL",
-                          )}
-                        </p>
+                    <div className="flex items-center gap-4">
+                      {product.image_url ? (
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
+                          className="h-14 w-14 rounded-[16px] object-cover"
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="flex h-14 w-14 items-center justify-center rounded-[16px] border border-dashed border-[var(--line)] text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
+                          Sin imagen
+                        </div>
                       )}
+                      <div>
+                        <p className="font-[var(--font-display)] text-lg text-[var(--ink)]">
+                          {product.name}
+                        </p>
+                        <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+                          {product.category}
+                        </p>
+                        {product.code && (
+                          <p className="mt-1 text-[11px] uppercase tracking-[0.25em] text-[var(--muted)]">
+                            Código: {product.code}
+                          </p>
+                        )}
+                        {product.created_at && (
+                          <p className="mt-1 text-xs text-[var(--muted)]">
+                            Subido:{" "}
+                            {new Date(product.created_at).toLocaleDateString(
+                              "es-CL",
+                            )}
+                          </p>
+                        )}
+                      </div>
                     </div>
                     <span className="text-sm text-[var(--accent-strong)]">
                       {formatCLP(product.price)}
@@ -497,6 +534,7 @@ export default function AdminPage() {
                           price: String(product.price),
                           stock: String(product.stock),
                           category: product.category,
+                          code: product.code ?? "",
                           detail: product.detail ?? "",
                           image_url: product.image_url ?? "",
                           is_featured: Boolean(product.is_featured),
@@ -545,10 +583,29 @@ export default function AdminPage() {
                     {formatCLP(order.total)}
                   </span>
                 </div>
-                <ul className="text-sm text-[var(--muted)]">
+                <ul className="flex flex-col gap-2 text-sm text-[var(--muted)]">
                   {order.items?.map((item) => (
-                    <li key={`${order.id}-${item.id}`}>
-                      {item.name} x{item.quantity}
+                    <li
+                      key={`${order.id}-${item.id}`}
+                      className="flex items-center justify-between gap-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        {item.image_url ? (
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="h-10 w-10 rounded-[12px] object-cover"
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-[12px] border border-dashed border-[var(--line)] text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
+                            Sin
+                          </div>
+                        )}
+                        <span>{item.name}</span>
+                      </div>
+                      <span>x{item.quantity}</span>
                     </li>
                   ))}
                 </ul>
