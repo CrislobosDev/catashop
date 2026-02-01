@@ -5,7 +5,7 @@ import SearchableProductGrid from "@/components/SearchableProductGrid";
 export default function Home() {
   return (
     <div className="fade-in">
-      <section className="section px-4 sm:px-6">
+      <section className="section px-6 sm:px-10">
         <div className="mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1.2fr_0.8fr]">
           <div className="flex flex-col justify-center gap-6">
             <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)]">
@@ -63,7 +63,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section px-4 sm:px-6">
+      <section className="section px-6 sm:px-10">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>

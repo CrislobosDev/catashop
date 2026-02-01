@@ -75,6 +75,19 @@ a {
 
 .section {
   padding: 4.5rem 0;
+  padding-inline: 2rem;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding-inline: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-inline: 4rem;
+  }
 }
 
 .card {

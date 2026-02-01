@@ -48,7 +48,7 @@ export default function CarritoPage() {
   };
 
   return (
-    <section className="section px-4 sm:px-6">
+    <section className="section px-6 sm:px-10">
       <div className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-3">
           <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)]">

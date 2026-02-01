@@ -208,7 +208,7 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <section className="section px-4 sm:px-6">
+      <section className="section px-6 sm:px-10">
         <div className="mx-auto w-full max-w-5xl text-sm text-[var(--muted)]">
           Cargando panel...
         </div>
@@ -218,7 +218,7 @@ export default function AdminPage() {
 
   if (!supabase) {
     return (
-      <section className="section px-4 sm:px-6">
+      <section className="section px-6 sm:px-10">
         <div className="mx-auto w-full max-w-md card p-8 text-sm text-[var(--muted)]">
           Configura las variables de Supabase en .env.local para habilitar el
           panel.
@@ -229,7 +229,7 @@ export default function AdminPage() {
 
   if (!session) {
     return (
-      <section className="section px-4 sm:px-6">
+      <section className="section px-6 sm:px-10">
         <div className="mx-auto w-full max-w-md card p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
             Acceso administrador
@@ -270,7 +270,7 @@ export default function AdminPage() {
   }
 
   return (
-    <section className="section px-4 sm:px-6">
+    <section className="section px-6 sm:px-10">
       <div className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
