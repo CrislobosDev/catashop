@@ -15,7 +15,7 @@ export default function Header() {
   const { count } = useCart();
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6 sm:px-10">
         <Link href="/" className="group flex items-center gap-3">
           <span className="text-xs uppercase tracking-[0.35em] text-[var(--muted)]">
             Cata
@@ -44,7 +44,7 @@ export default function Header() {
           <ThemeToggle />
         </div>
       </div>
-      <nav className="flex items-center justify-center gap-6 border-t border-[var(--line)] px-6 py-4 text-xs uppercase tracking-[0.25em] text-[var(--muted)] md:hidden">
+      <nav className="flex flex-wrap items-center justify-center gap-8 border-t border-[var(--line)] px-6 py-5 text-xs uppercase tracking-[0.25em] text-[var(--muted)] md:hidden">
         {navItems.map((item) => (
           <Link
             key={`${item.href}-mobile`}
