@@ -66,8 +66,9 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (!session || !supabase) return;
+    if (!session) return;
     const loadData = async () => {
+      if (!supabase) return;
       const { data: productsData } = await supabase
         .from("products")
         .select("*")
