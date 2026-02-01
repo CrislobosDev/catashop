@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartContext";
+import RouteTransition from "@/components/RouteTransition";
 
 const displayFont = Playfair_Display({
   variable: "--font-display",
@@ -32,7 +33,9 @@ export default function RootLayout({
         <CartProvider>
           <div className="page-shell">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">
+              <RouteTransition>{children}</RouteTransition>
+            </main>
             <Footer />
           </div>
         </CartProvider>

@@ -26,10 +26,26 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="rounded-full border border-[var(--line)] px-4 py-2 text-xs uppercase tracking-[0.25em] text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+      role="switch"
+      aria-checked={theme === "dark"}
       aria-label="Cambiar modo de color"
+      className="group inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_92%,transparent)] px-3 py-2 text-[10px] uppercase tracking-[0.25em] text-[var(--muted)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)]"
     >
-      {theme === "light" ? "Modo oscuro" : "Modo claro"}
+      <span className="hidden sm:inline">Modo</span>
+      <span
+        className={`relative inline-flex h-7 w-12 items-center rounded-full border border-[var(--line)] transition-colors duration-300 ${
+          theme === "dark" ? "bg-[var(--accent)]" : "bg-[var(--sand)]"
+        }`}
+      >
+        <span
+          className={`h-5 w-5 rounded-full bg-[var(--surface)] shadow-[0_6px_16px_rgba(0,0,0,0.18)] transition-transform duration-300 ${
+            theme === "dark" ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </span>
+      <span className="hidden md:inline">
+        {theme === "light" ? "Oscuro" : "Claro"}
+      </span>
     </button>
   );
 }

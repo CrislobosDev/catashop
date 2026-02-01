@@ -9,7 +9,6 @@ const navItems = [
   { href: "/", label: "Inicio" },
   { href: "/productos", label: "Productos" },
   { href: "/ofertas", label: "Ofertas" },
-  { href: "/carrito", label: "Carrito", isCart: true },
 ];
 
 export default function Header() {
