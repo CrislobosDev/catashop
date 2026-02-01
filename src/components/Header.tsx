@@ -35,11 +35,6 @@ export default function Header() {
               className="relative transition-colors duration-300 hover:text-[var(--accent-strong)]"
             >
               {item.label}
-              {item.isCart && count > 0 && (
-                <span className="absolute -right-4 -top-2 rounded-full bg-[var(--accent)] px-2 py-0.5 text-[10px] tracking-normal text-white">
-                  {count}
-                </span>
-              )}
             </Link>
           ))}
         </nav>
@@ -92,11 +87,6 @@ export default function Header() {
                 className="relative flex items-center justify-between rounded-full border border-[var(--line)] px-5 py-3 text-[var(--ink)]"
               >
                 <span>{item.label}</span>
-                {item.isCart && count > 0 && (
-                  <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[10px] tracking-normal text-white">
-                    {count}
-                  </span>
-                )}
               </Link>
             ))}
           </div>
