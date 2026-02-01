@@ -43,7 +43,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (existing) {
         return prev.map((item) =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity: Math.min(item.quantity + 1, item.stock),
+              }
             : item,
         );
       }
@@ -59,7 +62,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setItems((prev) =>
       prev.map((item) =>
         item.id === productId
-          ? { ...item, quantity: Math.max(1, quantity) }
+          ? { ...item, quantity: Math.min(Math.max(1, quantity), item.stock) }
           : item,
       ),
     );

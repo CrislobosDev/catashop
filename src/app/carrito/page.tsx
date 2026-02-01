@@ -84,46 +84,60 @@ export default function CarritoPage() {
                         {item.category}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateQuantity(item.id, Math.max(1, item.quantity - 1))
-                          }
-                          className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
-                          aria-label="Restar cantidad"
-                        >
-                          -
-                        </button>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                      <div className="flex flex-col items-center gap-2">
                         <input
                           type="number"
                           min={1}
+                          max={item.stock}
                           value={item.quantity}
                           onChange={(event) =>
                             updateQuantity(item.id, Number(event.target.value))
                           }
-                          className="w-24 rounded-full border border-[var(--line)] px-4 py-2 text-base text-center"
+                          className="w-20 rounded-full border border-[var(--line)] px-3 py-2 text-base text-center sm:w-24"
                         />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(
+                                item.id,
+                                Math.max(1, item.quantity - 1),
+                              )
+                            }
+                            className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+                            aria-label="Restar cantidad"
+                          >
+                            -
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
+                            disabled={item.quantity >= item.stock}
+                            className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-50"
+                            aria-label="Sumar cantidad"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-[var(--muted)]">
+                          Stock: {item.stock}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-4 sm:justify-start">
+                        <span className="text-sm text-[var(--accent-strong)]">
+                          {formatCLP(item.price * item.quantity)}
+                        </span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
-                          aria-label="Sumar cantidad"
+                          onClick={() => removeItem(item.id)}
+                          className="text-xs uppercase tracking-[0.3em] text-[var(--muted)] hover:text-[var(--accent-strong)]"
                         >
-                          +
+                          Quitar
                         </button>
                       </div>
-                      <span className="text-sm text-[var(--accent-strong)]">
-                        {formatCLP(item.price * item.quantity)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.id)}
-                        className="text-xs uppercase tracking-[0.3em] text-[var(--muted)] hover:text-[var(--accent-strong)]"
-                      >
-                        Quitar
-                      </button>
                     </div>
                   </div>
                 ))}
