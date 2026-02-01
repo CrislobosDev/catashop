@@ -18,6 +18,19 @@ type ProductFormState = {
   is_offer: boolean;
 };
 
+const categoryOptions = [
+  "Hogar",
+  "Jardín",
+  "Tecnología",
+  "Escolar",
+  "Regalos",
+  "Cuidado personal",
+  "Mascotas",
+  "Cocina",
+  "Decoración",
+  "Otro",
+] as const;
+
 const emptyForm: ProductFormState = {
   name: "",
   price: "",
@@ -39,6 +52,10 @@ export default function AdminPage() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [onlyFeatured, setOnlyFeatured] = useState(false);
+  const [onlyOffers, setOnlyOffers] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -143,10 +160,29 @@ export default function AdminPage() {
     }
   };
 
+
   const productCount = useMemo(
     () => products.reduce((acc, item) => acc + item.stock, 0),
     [products],
   );
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesCategory =
+        categoryFilter === "all" || product.category === categoryFilter;
+      const matchesSearch =
+        searchTerm.trim().length === 0 ||
+        product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesFeatured = !onlyFeatured || Boolean(product.is_featured);
+      const matchesOffers = !onlyOffers || Boolean(product.is_offer);
+      return matchesCategory && matchesSearch && matchesFeatured && matchesOffers;
+    });
+  }, [products, categoryFilter, searchTerm, onlyFeatured, onlyOffers]);
+
+  const availableCategories = useMemo(() => {
+    const unique = new Set(products.map((product) => product.category).filter(Boolean));
+    return ["all", ...Array.from(unique)];
+  }, [products]);
 
   const signIn = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -172,7 +208,7 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <section className="section px-6">
+      <section className="section px-4 sm:px-6">
         <div className="mx-auto w-full max-w-5xl text-sm text-[var(--muted)]">
           Cargando panel...
         </div>
@@ -182,7 +218,7 @@ export default function AdminPage() {
 
   if (!supabase) {
     return (
-      <section className="section px-6">
+      <section className="section px-4 sm:px-6">
         <div className="mx-auto w-full max-w-md card p-8 text-sm text-[var(--muted)]">
           Configura las variables de Supabase en .env.local para habilitar el
           panel.
@@ -193,7 +229,7 @@ export default function AdminPage() {
 
   if (!session) {
     return (
-      <section className="section px-6">
+      <section className="section px-4 sm:px-6">
         <div className="mx-auto w-full max-w-md card p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
             Acceso administrador
@@ -234,7 +270,7 @@ export default function AdminPage() {
   }
 
   return (
-    <section className="section px-6">
+    <section className="section px-4 sm:px-6">
       <div className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -299,6 +335,7 @@ export default function AdminPage() {
               </div>
               <input
                 type="text"
+                list="category-options"
                 placeholder="Categoría"
                 value={form.category}
                 onChange={(event) =>
@@ -306,6 +343,11 @@ export default function AdminPage() {
                 }
                 className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
               />
+              <datalist id="category-options">
+                {categoryOptions.map((option) => (
+                  <option key={option} value={option} />
+                ))}
+              </datalist>
               <textarea
                 placeholder="Detalle"
                 value={form.detail}
@@ -313,15 +355,6 @@ export default function AdminPage() {
                   setForm((prev) => ({ ...prev, detail: event.target.value }))
                 }
                 className="min-h-[120px] rounded-[20px] border border-[var(--line)] px-4 py-3 text-sm"
-              />
-              <input
-                type="text"
-                placeholder="URL de imagen"
-                value={form.image_url}
-                onChange={(event) =>
-                  setForm((prev) => ({ ...prev, image_url: event.target.value }))
-                }
-                className="rounded-full border border-[var(--line)] px-4 py-3 text-sm"
               />
               <input
                 type="file"
@@ -379,13 +412,51 @@ export default function AdminPage() {
             <h2 className="font-[var(--font-display)] text-xl text-[var(--ink)]">
               Productos activos
             </h2>
-            <div className="mt-4 flex flex-col gap-4">
-              {products.length === 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[var(--muted)]">
+              <span>Filtrar:</span>
+              <select
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+                className="rounded-full border border-[var(--line)] bg-transparent px-3 py-2 text-xs uppercase tracking-[0.2em] text-[var(--ink)]"
+              >
+                {availableCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category === "all" ? "Todas" : category}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Buscar"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                className="rounded-full border border-[var(--line)] px-3 py-2 text-xs uppercase tracking-[0.2em] text-[var(--ink)]"
+              />
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={onlyFeatured}
+                  onChange={(event) => setOnlyFeatured(event.target.checked)}
+                />
+                Destacados
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={onlyOffers}
+                  onChange={(event) => setOnlyOffers(event.target.checked)}
+                />
+                Ofertas
+              </label>
+            </div>
+            <div className="mt-4 max-h-[520px] overflow-y-auto pr-2">
+              <div className="flex flex-col gap-4">
+              {filteredProducts.length === 0 && (
                 <p className="text-sm text-[var(--muted)]">
                   Aún no hay productos cargados.
                 </p>
               )}
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <div
                   key={product.id}
                   className="flex flex-col gap-3 border-b border-[var(--line)] pb-4 last:border-b-0 last:pb-0"
@@ -398,6 +469,14 @@ export default function AdminPage() {
                       <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
                         {product.category}
                       </p>
+                      {product.created_at && (
+                        <p className="mt-1 text-xs text-[var(--muted)]">
+                          Subido:{" "}
+                          {new Date(product.created_at).toLocaleDateString(
+                            "es-CL",
+                          )}
+                        </p>
+                      )}
                     </div>
                     <span className="text-sm text-[var(--accent-strong)]">
                       {formatCLP(product.price)}
@@ -438,6 +517,7 @@ export default function AdminPage() {
                   </div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
         </div>

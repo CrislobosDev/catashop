@@ -4,15 +4,21 @@ import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/lib/types";
 import ProductCard from "@/components/ProductCard";
 import { supabase } from "@/lib/supabase/client";
+import ProductModal from "@/components/ProductModal";
 
 type ProductGridProps = {
   mode?: "all" | "featured" | "offers";
+  searchTerm?: string;
 };
 
-export default function ProductGrid({ mode = "all" }: ProductGridProps) {
+export default function ProductGrid({
+  mode = "all",
+  searchTerm = "",
+}: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -49,6 +55,17 @@ export default function ProductGrid({ mode = "all" }: ProductGridProps) {
     load();
   }, [mode]);
 
+  const filteredProducts = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return products;
+    return products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term) ||
+        (product.detail ?? "").toLowerCase().includes(term),
+    );
+  }, [products, searchTerm]);
+
   const content = useMemo(() => {
     if (loading) {
       return (
@@ -64,19 +81,31 @@ export default function ProductGrid({ mode = "all" }: ProductGridProps) {
         </div>
       );
     }
-    if (products.length === 0) {
+    if (filteredProducts.length === 0) {
       return (
         <div className="col-span-full rounded-[28px] border border-dashed border-[var(--line)] p-10 text-center text-sm text-[var(--muted)]">
-          Aún no hay productos disponibles en esta sección.
+          No hay resultados para esta búsqueda.
         </div>
       );
     }
-    return products.map((product) => (
-      <ProductCard key={product.id} product={product} />
+    return filteredProducts.map((product) => (
+      <ProductCard
+        key={product.id}
+        product={product}
+        onView={(item) => setSelectedProduct(item)}
+      />
     ));
-  }, [loading, error, products]);
+  }, [loading, error, filteredProducts]);
 
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">{content}</div>
+    <>
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">{content}</div>
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
+    </>
   );
 }

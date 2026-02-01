@@ -7,21 +7,62 @@ import { useCart } from "@/components/CartContext";
 
 type ProductCardProps = {
   product: Product;
+  onView: (product: Product) => void;
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+const supabaseHost = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url) return null;
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+})();
+
+const canUseNextImage = (imageUrl: string) => {
+  try {
+    const host = new URL(imageUrl).hostname;
+    return supabaseHost ? host === supabaseHost : false;
+  } catch {
+    return false;
+  }
+};
+
+export default function ProductCard({ product, onView }: ProductCardProps) {
   const { addItem } = useCart();
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[var(--line)] bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(31,26,23,0.1)]">
+    <article
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[28px] border border-[var(--line)] bg-[var(--surface)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(31,26,23,0.1)]"
+      onClick={() => onView(product)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onView(product);
+        }
+      }}
+    >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--sand)]">
         {product.image_url ? (
-          <Image
-            src={product.image_url}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          />
+          canUseNextImage(product.image_url) ? (
+            <Image
+              src={product.image_url}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+          ) : (
+            <img
+              src={product.image_url}
+              alt={product.name}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+            />
+          )
         ) : (
           <div className="flex h-full items-center justify-center text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
             Sin imagen
@@ -47,7 +88,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
         <button
           type="button"
-          onClick={() => addItem(product)}
+          onClick={(event) => {
+            event.stopPropagation();
+            addItem(product);
+          }}
           className="mt-auto rounded-full border border-[var(--line)] px-4 py-2 text-xs uppercase tracking-[0.3em] text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
         >
           Agregar

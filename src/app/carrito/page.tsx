@@ -48,7 +48,7 @@ export default function CarritoPage() {
   };
 
   return (
-    <section className="section px-6">
+    <section className="section px-4 sm:px-6">
       <div className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-3">
           <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)]">
@@ -85,15 +85,35 @@ export default function CarritoPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
-                      <input
-                        type="number"
-                        min={1}
-                        value={item.quantity}
-                        onChange={(event) =>
-                          updateQuantity(item.id, Number(event.target.value))
-                        }
-                        className="w-20 rounded-full border border-[var(--line)] px-3 py-2 text-sm"
-                      />
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                          }
+                          className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+                          aria-label="Restar cantidad"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          min={1}
+                          value={item.quantity}
+                          onChange={(event) =>
+                            updateQuantity(item.id, Number(event.target.value))
+                          }
+                          className="w-24 rounded-full border border-[var(--line)] px-4 py-2 text-base text-center"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="h-10 w-10 rounded-full border border-[var(--line)] text-base text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+                          aria-label="Sumar cantidad"
+                        >
+                          +
+                        </button>
+                      </div>
                       <span className="text-sm text-[var(--accent-strong)]">
                         {formatCLP(item.price * item.quantity)}
                       </span>

@@ -7,13 +7,24 @@ export default function Footer() {
             Catashop
           </p>
           <p className="mt-2 max-w-md">
-            Variedad curada para tu día a día. Envíos coordinados directamente
-            por WhatsApp.
+            Productos para el día a día desde Santo Domingo, Chile. Pagos y
+            entregas coordinadas por WhatsApp.
           </p>
         </div>
         <div className="text-xs uppercase tracking-[0.3em]">
-          Santiago · Chile · CLP
+          Santo Domingo · Chile · CLP
         </div>
+      </div>
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-4 px-6 pb-10 text-xs text-[var(--muted)] md:flex-row md:items-center md:justify-between">
+        <span>Contacto: +56 9 7328 3737 · contacto@catashop.cl</span>
+        <a
+          href="https://wa.me/56973283737"
+          className="rounded-full border border-[var(--line)] px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Hablar por WhatsApp
+        </a>
       </div>
     </footer>
   );

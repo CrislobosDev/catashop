@@ -8,6 +8,7 @@ export type Product = {
   detail: string | null;
   is_featured?: boolean | null;
   is_offer?: boolean | null;
+  created_at?: string | null;
 };
 
 export type CartItem = Product & {

@@ -1,21 +1,22 @@
 import Link from "next/link";
 import ProductGrid from "@/components/ProductGrid";
+import SearchableProductGrid from "@/components/SearchableProductGrid";
 
 export default function Home() {
   return (
     <div className="fade-in">
-      <section className="section px-6">
+      <section className="section px-4 sm:px-6">
         <div className="mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[1.2fr_0.8fr]">
           <div className="flex flex-col justify-center gap-6">
             <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)]">
-              Catashop · Variedad · Chile
+              Catashop · Santo Domingo · Chile
             </p>
             <h1 className="font-[var(--font-display)] text-4xl leading-tight text-[var(--ink)] md:text-5xl">
-              Todo lo que necesitas, en una tienda minimalista y cálida.
+              Productos para el día a día, con envío a todo Chile.
             </h1>
             <p className="max-w-xl text-lg text-[var(--muted)]">
-              Variedad curada con cuidado: hogar, regalos y essentials listos
-              para coordinar tu compra por WhatsApp.
+              Variedad práctica y bonita para tu hogar, trabajo y regalos.
+              Pagos y entregas se coordinan por WhatsApp al finalizar tu compra.
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <Link
@@ -35,24 +36,34 @@ export default function Home() {
           <div className="card flex flex-col justify-between gap-6 p-8 slide-up">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-                Selección semanal
+                Atención cercana
               </p>
               <h2 className="mt-3 font-[var(--font-display)] text-2xl text-[var(--ink)]">
-                Productos destacados
+                Compras coordinadas por WhatsApp
               </h2>
               <p className="mt-2 text-sm text-[var(--muted)]">
-                Variedad con stock controlado en tiempo real.
+                Al finalizar, se envía un mensaje automático a la vendedora para
+                coordinar pago y envío.
               </p>
             </div>
             <div className="rounded-[20px] border border-dashed border-[var(--line)] px-6 py-5 text-sm text-[var(--muted)]">
-              Compra directa por WhatsApp · Pago y envío coordinado con la
-              vendedora.
+              Envíos a todo Chile · Stock actualizado · Respuesta rápida.
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section bg-[var(--surface)] px-6">
+      <section className="section bg-[var(--surface)] px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl">
+          <SearchableProductGrid
+            mode="all"
+            title="Encuentra tu próximo esencial"
+            description="Productos útiles y con estilo, listos para coordinar tu compra."
+          />
+        </div>
+      </section>
+
+      <section className="section px-4 sm:px-6">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
@@ -64,7 +75,7 @@ export default function Home() {
               </h2>
             </div>
             <Link
-              href="/galeria"
+              href="/productos"
               className="text-xs uppercase tracking-[0.3em] text-[var(--accent-strong)]"
             >
               Ver todo
@@ -80,16 +91,16 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-3">
           {[
             {
-              title: "Inventario real",
-              text: "Control de stock actualizado desde el panel de administración.",
+              title: "Stock real y actualizado",
+              text: "Confirmamos disponibilidad antes de coordinar tu envío.",
             },
             {
-              title: "Atención inmediata",
-              text: "Conecta por WhatsApp para coordinar pago y despacho.",
+              title: "Atención local en Santo Domingo",
+              text: "Cercanía y rapidez en cada coordinación por WhatsApp.",
             },
             {
-              title: "Estilo cálido",
-              text: "Paleta elegante y materiales seleccionados para cada espacio.",
+              title: "Envíos a todo Chile",
+              text: "Despachamos a la región que necesites con seguimiento.",
             },
           ].map((item) => (
             <div key={item.title} className="card p-6">
