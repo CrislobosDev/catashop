@@ -69,13 +69,14 @@ export default function AdminPage() {
     if (!session) return;
     const loadData = async () => {
       if (!supabase) return;
-      const { data: productsData } = await supabase
+      const client = supabase;
+      const { data: productsData } = await client
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
       setProducts((productsData ?? []) as Product[]);
 
-      const { data: ordersData } = await supabase
+      const { data: ordersData } = await client
         .from("orders")
         .select("*")
         .order("created_at", { ascending: false });
