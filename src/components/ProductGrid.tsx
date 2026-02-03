@@ -5,6 +5,7 @@ import type { Product } from "@/lib/types";
 import ProductCard from "@/components/ProductCard";
 import { supabase } from "@/lib/supabase/client";
 import ProductModal from "@/components/ProductModal";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ProductGridProps = {
   mode?: "all" | "featured" | "offers";
@@ -88,18 +89,27 @@ export default function ProductGrid({
         </div>
       );
     }
-    return filteredProducts.map((product) => (
-      <ProductCard
-        key={product.id}
-        product={product}
-        onView={(item) => setSelectedProduct(item)}
-      />
-    ));
+    return (
+      <AnimatePresence mode="popLayout">
+        {filteredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onView={(item) => setSelectedProduct(item)}
+          />
+        ))}
+      </AnimatePresence>
+    );
   }, [loading, error, filteredProducts]);
 
   return (
     <>
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">{content}</div>
+      <motion.div
+        layout
+        className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {content}
+      </motion.div>
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}

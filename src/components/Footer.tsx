@@ -11,8 +11,9 @@ export default function Footer() {
             entregas coordinadas por WhatsApp.
           </p>
         </div>
-        <div className="text-xs uppercase tracking-[0.3em]">
-          Santo Domingo · Chile · CLP
+        <div className="text-xs uppercase tracking-[0.3em] flex flex-col md:flex-row gap-4 md:gap-8">
+          <a href="/faq" className="hover:text-[var(--accent-strong)] transition-colors">Preguntas Frecuentes</a>
+          <span>Santo Domingo · Chile · CLP</span>
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-4 px-6 pb-10 text-xs text-[var(--muted)] md:flex-row md:items-center md:justify-between">

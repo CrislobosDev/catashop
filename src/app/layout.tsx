@@ -17,9 +17,26 @@ const bodyFont = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Catashop - Tienda de Variedad",
+  metadataBase: new URL("https://catashop.cl"),
+  title: {
+    default: "Catashop - Tienda de Variedad",
+    template: "%s | Catashop",
+  },
   description:
     "Catashop: tienda de variedad con estilo minimalista, ofertas cálidas y compra rápida por WhatsApp.",
+  openGraph: {
+    title: "Catashop - Tienda de Variedad",
+    description: "Variedad práctica y bonita en un solo lugar. Coordinamos pago y entrega por WhatsApp en minutos.",
+    url: "https://catashop.cl",
+    siteName: "Catashop",
+    locale: "es_CL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Catashop - Tienda de Variedad",
+    description: "Variedad práctica y bonita en un solo lugar. Coordinamos pago y entrega por WhatsApp en minutos.",
+  },
 };
 
 export default function RootLayout({

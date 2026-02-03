@@ -18,22 +18,18 @@ export default function CarritoPage() {
     setSaving(true);
     setError(null);
 
-    if (!supabase) {
-      setError("Configura Supabase antes de registrar pedidos.");
-      setSaving(false);
-      return;
-    }
+    // Intentamos guardar en Supabase, pero no bloqueamos si falla
+    if (supabase) {
+      const { error: insertError } = await supabase.from("orders").insert({
+        items,
+        total,
+        status: "new",
+      });
 
-    const { error: insertError } = await supabase.from("orders").insert({
-      items,
-      total,
-      status: "new",
-    });
-
-    if (insertError) {
-      setError("No pudimos registrar el pedido. Intenta nuevamente.");
-      setSaving(false);
-      return;
+      if (insertError) {
+        console.error("Error guardando pedido en Supabase:", insertError);
+        // No mostramos error al usuario para no detener la venta
+      }
     }
 
     const message = buildWhatsAppMessage(items, total);
