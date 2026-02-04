@@ -111,7 +111,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
 
         if (!supabase) return;
 
-        const payload = {
+        const payload: any = {
             name: form.name,
             price: Number(form.price),
             stock: Number(form.stock),
@@ -123,12 +123,29 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
             is_offer: form.is_offer,
         };
 
-        const { error } = form.id
-            ? await supabase.from("products").update(payload).eq("id", form.id)
-            : await supabase.from("products").insert(payload);
+        let dbError;
 
-        if (error) {
-            setMessage("Error al guardar el producto.");
+        if (form.id) {
+            // Update existing
+            const { error } = await supabase.from("products").update(payload).eq("id", form.id);
+            dbError = error;
+        } else {
+            // Create new
+            // Generate readable_id if not present
+            const readable_id = Math.random().toString(36).substring(2, 8).toUpperCase();
+            payload.readable_id = readable_id;
+
+            const { error } = await supabase.from("products").insert(payload);
+            dbError = error;
+        }
+
+        if (dbError) {
+            console.error("Error al guardar producto keys:", Object.keys(dbError));
+            console.error("Error al guardar producto complete:", JSON.stringify(dbError, null, 2));
+            // @ts-ignore
+            const errorDetails = dbError?.message || dbError?.details || JSON.stringify(dbError);
+            console.error("Error details:", errorDetails);
+            setMessage(`Error: ${errorDetails}`);
         } else {
             setMessage(form.id ? "Producto actualizado." : "Producto creado.");
             setForm(emptyForm);
@@ -290,7 +307,14 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                                         )}
                                     </div>
                                     <div>
-                                        <h4 className="font-medium text-[var(--ink)] text-sm line-clamp-1">{product.name}</h4>
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="font-medium text-[var(--ink)] text-sm line-clamp-1">{product.name}</h4>
+                                            {product.readable_id && (
+                                                <span className="font-mono text-[10px] text-[var(--muted)] bg-[var(--line)] px-1.5 py-0.5 rounded">
+                                                    #{product.readable_id}
+                                                </span>
+                                            )}
+                                        </div>
                                         <div className="flex items-center gap-2 text-xs text-[var(--muted)] uppercase tracking-wide">
                                             <span>{product.category}</span>
                                             <span>•</span>

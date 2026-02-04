@@ -2,21 +2,35 @@
 
 import { useState } from "react";
 import { useCart } from "@/components/CartContext";
-import { buildWhatsAppMessage, formatCLP, normalizePhoneToWhatsApp } from "@/lib/format";
+import {
+  buildWhatsAppMessage,
+  formatCLP,
+  normalizePhoneToWhatsApp,
+} from "@/lib/format";
 import { supabase } from "@/lib/supabase/client";
+import CheckoutForm from "@/components/CheckoutForm";
+import type { CustomerDetails } from "@/lib/types";
 
-const vendorPhone = "+569 73283737";
+const vendorPhone = "+56932422471";
 
 export default function CarritoPage() {
   const { items, total, updateQuantity, removeItem, clear } = useCart();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
 
-  const handleWhatsApp = async () => {
+  const generateOrderId = () => {
+    // Generate a 6-character random alphanumeric string, uppercase
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
+  const handleWhatsApp = async (customer: CustomerDetails) => {
     if (items.length === 0) return;
 
     setSaving(true);
     setError(null);
+
+    const orderId = generateOrderId();
 
     // Intentamos guardar en Supabase, pero no bloqueamos si falla
     if (supabase) {
@@ -24,6 +38,8 @@ export default function CarritoPage() {
         items,
         total,
         status: "new",
+        customer_details: customer,
+        readable_id: orderId,
       });
 
       if (insertError) {
@@ -32,7 +48,7 @@ export default function CarritoPage() {
       }
     }
 
-    const message = buildWhatsAppMessage(items, total);
+    const message = buildWhatsAppMessage(items, total, customer, orderId);
     const whatsappPhone = normalizePhoneToWhatsApp(vendorPhone);
     const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
       message,
@@ -41,6 +57,14 @@ export default function CarritoPage() {
     clear();
     window.open(url, "_blank", "noopener,noreferrer");
     setSaving(false);
+  };
+
+  const handleInitialCheckout = () => {
+    setShowCheckoutForm(true);
+  };
+
+  const handleCancelCheckout = () => {
+    setShowCheckoutForm(false);
   };
 
   return (
@@ -65,6 +89,17 @@ export default function CarritoPage() {
               <p className="text-sm text-[var(--muted)]">
                 Aún no agregas productos al carrito.
               </p>
+            ) : showCheckoutForm ? (
+              <div>
+                <h2 className="mb-6 font-[var(--font-display)] text-xl text-[var(--ink)]">
+                  Datos de Envío
+                </h2>
+                <CheckoutForm
+                  onSubmit={handleWhatsApp}
+                  onCancel={handleCancelCheckout}
+                  total={formatCLP(total)}
+                />
+              </div>
             ) : (
               <div className="flex flex-col gap-6">
                 {items.map((item) => (
@@ -156,33 +191,32 @@ export default function CarritoPage() {
             )}
           </div>
 
-          <div className="card h-fit p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-              Resumen
-            </p>
-            <div className="mt-4 flex items-center justify-between text-sm">
-              <span>Total</span>
-              <span className="text-lg text-[var(--accent-strong)]">
-                {formatCLP(total)}
-              </span>
-            </div>
-            {error && (
-              <p className="mt-4 text-xs uppercase tracking-[0.2em] text-red-600">
-                {error}
+          {!showCheckoutForm && (
+            <div className="card h-fit p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+                Resumen
               </p>
-            )}
-            <button
-              type="button"
-              disabled={items.length === 0 || saving}
-              onClick={handleWhatsApp}
-              className="mt-6 w-full rounded-full bg-[var(--accent)] px-6 py-3 text-xs uppercase tracking-[0.3em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {saving ? "Generando..." : "Finalizar por WhatsApp"}
-            </button>
-            <p className="mt-4 text-xs text-[var(--muted)]">
-              Vendedora: {vendorPhone}
-            </p>
-          </div>
+              <div className="mt-4 flex items-center justify-between text-sm">
+                <span>Total</span>
+                <span className="text-lg text-[var(--accent-strong)]">
+                  {formatCLP(total)}
+                </span>
+              </div>
+              {error && (
+                <p className="mt-4 text-xs uppercase tracking-[0.2em] text-red-600">
+                  {error}
+                </p>
+              )}
+              <button
+                type="button"
+                disabled={items.length === 0 || saving}
+                onClick={handleInitialCheckout}
+                className="mt-6 w-full rounded-full bg-[var(--accent)] px-6 py-3 text-xs uppercase tracking-[0.3em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? "Generando..." : "Continuar Compra"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

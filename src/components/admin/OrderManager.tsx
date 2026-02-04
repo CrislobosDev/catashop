@@ -134,6 +134,9 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                         <div className="flex items-center gap-3 text-sm text-[var(--muted)]">
                             <Clock size={16} />
                             <span>{new Date(order.created_at).toLocaleString("es-CL")}</span>
+                            <span className="font-mono text-xs text-[var(--ink)] bg-[var(--line)] px-2 py-0.5 rounded-md">
+                                #{order.readable_id || order.id.slice(0, 8)}
+                            </span>
                             {order.status === 'sold' && (
                                 <span className="flex items-center gap-1 text-green-600 bg-green-100 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold">
                                     <Check size={12} strokeWidth={3} />
