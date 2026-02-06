@@ -21,7 +21,8 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/galeria"
-                className="rounded-full bg-[var(--accent)] px-6 py-3 text-xs uppercase tracking-[0.3em] text-white shadow-[0_18px_40px_rgba(197,131,75,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)]"
+                className="rounded-full bg-[var(--accent-strong)] px-6 py-3 text-xs uppercase tracking-[0.3em] shadow-[0_18px_40px_rgba(160,125,140,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent)]"
+                style={{ color: '#1a1a1a' }}
               >
                 Explorar productos
               </Link>

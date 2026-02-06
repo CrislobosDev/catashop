@@ -2,28 +2,28 @@
 
 :root {
   color-scheme: light;
-  --bg: #faf7f2;
+  --bg: #faf8f9;
   --surface: #ffffff;
-  --ink: #1f1a17;
-  --muted: #7a6f66;
-  --accent: #c5834b;
-  --accent-strong: #a35f2f;
-  --sand: #f1e8dd;
-  --line: rgba(31, 26, 23, 0.08);
-  --shadow: rgba(31, 26, 23, 0.08);
+  --ink: #2d2a2e;
+  --muted: #8a8490;
+  --accent: #c4a4b1;
+  --accent-strong: #a07d8c;
+  --sand: #f5f0f2;
+  --line: rgba(45, 42, 46, 0.06);
+  --shadow: rgba(45, 42, 46, 0.06);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg: #151311;
-  --surface: #1f1b18;
-  --ink: #f3eee9;
-  --muted: #b8afa6;
-  --accent: #d49a62;
-  --accent-strong: #e6b07c;
-  --sand: #2a2521;
-  --line: rgba(243, 238, 233, 0.1);
-  --shadow: rgba(0, 0, 0, 0.35);
+  --bg: #1a1819;
+  --surface: #242022;
+  --ink: #f5f2f3;
+  --muted: #b5aeb2;
+  --accent: #d4b8c3;
+  --accent-strong: #e5cdd8;
+  --sand: #2e292c;
+  --line: rgba(245, 242, 243, 0.08);
+  --shadow: rgba(0, 0, 0, 0.3);
 }
 
 @theme inline {
@@ -39,8 +39,8 @@
 
 body {
   background:
-    radial-gradient(circle at 20% 10%, rgba(197, 131, 75, 0.2), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(241, 232, 221, 0.65), transparent 40%),
+    radial-gradient(circle at 20% 10%, rgba(196, 164, 177, 0.15), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(245, 240, 242, 0.5), transparent 40%),
     var(--bg);
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
@@ -64,7 +64,7 @@ a {
 }
 
 ::selection {
-  background: rgba(197, 131, 75, 0.2);
+  background: rgba(196, 164, 177, 0.25);
 }
 
 .page-shell {
@@ -124,6 +124,7 @@ a {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -134,6 +135,7 @@ a {
     opacity: 0;
     transform: translateY(18px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -145,6 +147,7 @@ a {
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
