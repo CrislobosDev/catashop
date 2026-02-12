@@ -165,7 +165,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                     {isEditing && (
                         <button
                             onClick={() => { setIsEditing(false); setForm(emptyForm); }}
-                            className="text-xs uppercase tracking-widest text-red-500 hover:text-red-700"
+                            className="text-xs uppercase tracking-[0.1em] text-red-500 hover:text-red-700"
                         >
                             Cancelar Edición
                         </button>
@@ -185,7 +185,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                             placeholder="Nombre del producto *"
                             value={form.name}
                             onChange={e => setForm({ ...form, name: e.target.value })}
-                            className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
                             required
                         />
                         <input
@@ -193,7 +193,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                             placeholder="Código (opcional)"
                             value={form.code}
                             onChange={e => setForm({ ...form, code: e.target.value })}
-                            className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
                         />
                     </div>
 
@@ -203,7 +203,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                             placeholder="Precio *"
                             value={form.price}
                             onChange={e => setForm({ ...form, price: e.target.value })}
-                            className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
                             required
                         />
                         <input
@@ -211,13 +211,13 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                             placeholder="Stock *"
                             value={form.stock}
                             onChange={e => setForm({ ...form, stock: e.target.value })}
-                            className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
                             required
                         />
                         <select
                             value={form.category}
                             onChange={e => setForm({ ...form, category: e.target.value })}
-                            className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all appearance-none"
+                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all appearance-none"
                             required
                         >
                             <option value="" disabled>Categoría *</option>
@@ -229,24 +229,24 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                         placeholder="Detalle o descripción del producto"
                         value={form.detail}
                         onChange={e => setForm({ ...form, detail: e.target.value })}
-                        className="w-full rounded-[20px] border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all min-h-[100px]"
+                        className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all min-h-[100px]"
                     />
 
                     {/* Image Upload */}
-                    <div className="border border-dashed border-[var(--line)] rounded-[20px] p-6 text-center">
+                    <div className="border border-dashed border-[var(--line)] rounded-lg p-6 text-center">
                         {form.image_url ? (
                             <div className="relative w-32 h-32 mx-auto mb-4">
-                                <img src={form.image_url} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+                                <img src={form.image_url} alt="Preview" className="w-full h-full object-cover rounded-lg" />
                                 <button type="button" onClick={() => setForm({ ...form, image_url: "" })} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X size={12} /></button>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center gap-2 text-[var(--muted)] mb-4">
                                 <ImageIcon size={32} />
-                                <span className="text-xs uppercase tracking-widest">Arrastra o selecciona una imagen</span>
+                                <span className="text-xs uppercase tracking-[0.1em]">Arrastra o selecciona una imagen</span>
                             </div>
                         )}
                         <input type="file" accept="image/*" onChange={e => handleUpload(e.target.files?.[0])} className="hidden" id="file-upload" />
-                        <label htmlFor="file-upload" className="cursor-pointer inline-block bg-[var(--surface)] border border-[var(--line)] px-4 py-2 rounded-full text-xs uppercase tracking-widest hover:border-[var(--accent)] transition-colors">
+                        <label htmlFor="file-upload" className="cursor-pointer inline-block bg-[var(--surface)] border border-[var(--line)] px-4 py-2 rounded-lg text-xs uppercase tracking-[0.1em] hover:border-[var(--accent)] transition-colors">
                             {uploading ? "Subiendo..." : "Seleccionar Archivo"}
                         </label>
                     </div>
@@ -270,7 +270,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                         </label>
                     </div>
 
-                    <button type="submit" disabled={uploading} className="w-full bg-[var(--accent)] text-white py-4 rounded-full text-xs uppercase tracking-[0.25em] hover:bg-[var(--accent-strong)] transition-colors disabled:opacity-50">
+                    <button type="submit" disabled={uploading} className="w-full bg-[var(--accent)] text-white py-4 rounded-lg text-sm font-medium uppercase tracking-[0.1em] hover:bg-[var(--accent-strong)] transition-colors disabled:opacity-50">
                         {isEditing ? "Guardar Cambios" : "Crear Producto"}
                     </button>
                 </form>

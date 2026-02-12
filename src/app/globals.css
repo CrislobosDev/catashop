@@ -2,28 +2,28 @@
 
 :root {
   color-scheme: light;
-  --bg: #faf8f9;
-  --surface: #ffffff;
-  --ink: #2d2a2e;
-  --muted: #8a8490;
-  --accent: #c4a4b1;
-  --accent-strong: #a07d8c;
-  --sand: #f5f0f2;
-  --line: rgba(45, 42, 46, 0.06);
-  --shadow: rgba(45, 42, 46, 0.06);
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --ink: #1A1A1A;
+  --muted: #6B6B6B;
+  --accent: #25D366;
+  --accent-strong: #1DA851;
+  --sand: #F5F5F5;
+  --line: #E5E5E5;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg: #1a1819;
-  --surface: #242022;
-  --ink: #f5f2f3;
-  --muted: #b5aeb2;
-  --accent: #d4b8c3;
-  --accent-strong: #e5cdd8;
-  --sand: #2e292c;
-  --line: rgba(245, 242, 243, 0.08);
-  --shadow: rgba(0, 0, 0, 0.3);
+  --bg: #0A0A0A;
+  --surface: #1A1A1A;
+  --ink: #FAFAFA;
+  --muted: #888888;
+  --accent: #25D366;
+  --accent-strong: #1DA851;
+  --sand: #262626;
+  --line: #2A2A2A;
+  --shadow: rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
@@ -38,14 +38,11 @@
 }
 
 body {
-  background:
-    radial-gradient(circle at 20% 10%, rgba(196, 164, 177, 0.15), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(245, 240, 242, 0.5), transparent 40%),
-    var(--bg);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
   min-height: 100vh;
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 input[type="number"] {
@@ -64,7 +61,7 @@ a {
 }
 
 ::selection {
-  background: rgba(196, 164, 177, 0.25);
+  background: rgba(37, 211, 102, 0.2);
 }
 
 .page-shell {
@@ -93,9 +90,9 @@ a {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 24px;
-  box-shadow: 0 20px 50px var(--shadow);
-  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .soft-border {

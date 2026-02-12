@@ -8,56 +8,47 @@ export default function Home() {
       <section className="section px-6 sm:px-10">
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex flex-col justify-center gap-6">
-            <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)]">
+            <p className="text-xs uppercase tracking-[0.15em] text-[var(--muted)]">
               Catashop · Santo Domingo · Chile
             </p>
-            <h1 className="font-[var(--font-display)] text-4xl leading-tight text-[var(--ink)] md:text-5xl">
-              Todo lo esencial para tu día a día, con envío a todo Chile.
+            <h1 className="font-[var(--font-display)] text-4xl leading-tight text-[var(--ink)] md:text-5xl lg:text-6xl">
+              Todo lo esencial para tu día a día
             </h1>
-            <p className="max-w-xl text-lg text-[var(--muted)]">
-              Variedad práctica y bonita en un solo lugar. Coordinamos pago y
+            <p className="max-w-xl text-lg leading-relaxed text-[var(--muted)]">
+              Variedad práctica en un solo lugar. Coordinamos pago y
               entrega por WhatsApp en minutos.
             </p>
             <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/galeria"
-                className="rounded-full bg-[var(--accent-strong)] px-6 py-3 text-xs uppercase tracking-[0.3em] shadow-[0_18px_40px_rgba(160,125,140,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent)]"
-                style={{ color: '#1a1a1a' }}
-              >
-                Explorar productos
-              </Link>
-              <Link
-                href="/ofertas"
-                className="rounded-full border border-[var(--line)] px-6 py-3 text-xs uppercase tracking-[0.3em] text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
-              >
-                Ver ofertas
-              </Link>
-            </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-[var(--muted)]">
-              <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-                Envíos a todo Chile
-              </span>
-              <span className="hidden h-3 w-px bg-[var(--line)] sm:block" />
-              <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-                Cambios coordinados por WhatsApp
-              </span>
-              <span className="hidden h-3 w-px bg-[var(--line)] sm:block" />
-              <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-                Respuesta rápida
-              </span>
-            </div>
-            <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[var(--muted)]">
               <a
                 href="https://wa.me/56973283737"
-                className="rounded-full border border-[var(--line)] px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-[var(--ink)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+                className="rounded-lg bg-[var(--accent)] px-8 py-4 text-sm font-semibold uppercase tracking-[0.1em] text-white shadow-sm transition-colors duration-300 hover:bg-[var(--accent-strong)]"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp directo
+                Pedir por WhatsApp
               </a>
+              <Link
+                href="/productos"
+                className="rounded-lg border-2 border-[var(--line)] px-8 py-4 text-sm font-medium uppercase tracking-[0.1em] text-[var(--ink)] transition-colors duration-300 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                Ver Productos
+              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[var(--muted)]">
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+                Envíos a todo Chile
+              </span>
+              <span className="hidden h-4 w-px bg-[var(--line)] sm:block" />
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+                Respuesta rápida
+              </span>
+              <span className="hidden h-4 w-px bg-[var(--line)] sm:block" />
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[var(--accent)]" />
+                Stock actualizado
+              </span>
             </div>
           </div>
         </div>
@@ -67,8 +58,8 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl">
           <SearchableProductGrid
             mode="all"
-            title="Encuentra tu próximo esencial"
-            description="Productos útiles y con estilo, listos para coordinar tu compra."
+            title="Todos los productos"
+            description="Encuentra lo que necesitas y coordina tu compra por WhatsApp."
           />
         </div>
       </section>
@@ -77,18 +68,18 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-center justify-between gap-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+              <p className="text-xs uppercase tracking-[0.1em] text-[var(--muted)]">
                 Destacados
               </p>
-              <h2 className="font-[var(--font-display)] text-3xl text-[var(--ink)]">
+              <h2 className="font-[var(--font-display)] text-3xl text-[var(--ink)] md:text-4xl">
                 Lo más solicitado
               </h2>
             </div>
             <Link
               href="/productos"
-              className="text-xs uppercase tracking-[0.3em] text-[var(--accent-strong)]"
+              className="text-sm font-medium uppercase tracking-[0.1em] text-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-              Ver todo
+              Ver todo →
             </Link>
           </div>
           <div className="mt-10">
@@ -101,18 +92,18 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+              <p className="text-xs uppercase tracking-[0.1em] text-[var(--muted)]">
                 Cómo comprar
               </p>
-              <h2 className="font-[var(--font-display)] text-3xl text-[var(--ink)]">
+              <h2 className="font-[var(--font-display)] text-3xl text-[var(--ink)] md:text-4xl">
                 Así de simple
               </h2>
-              <p className="mt-3 max-w-xl text-sm text-[var(--muted)]">
+              <p className="mt-3 max-w-xl text-base leading-relaxed text-[var(--muted)]">
                 Agrega productos al carrito y finaliza por WhatsApp para
-                coordinar pago y envío en minutos.
+                coordinar pago y envío.
               </p>
             </div>
-            <div className="grid w-full gap-4 md:max-w-md">
+            <div className="grid w-full gap-3 md:max-w-md">
               {[
                 "Explora y agrega al carrito",
                 "Revisa tu selección",
@@ -120,10 +111,13 @@ export default function Home() {
               ].map((step, index) => (
                 <div
                   key={step}
-                  className="flex items-center justify-between rounded-[22px] border border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_70%,transparent)] px-5 py-4 text-xs uppercase tracking-[0.25em] text-[var(--muted)] backdrop-blur"
+                  className="flex items-center gap-4 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-5 py-4"
                 >
-                  <span>
-                    {index + 1}. {step}
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-semibold text-white">
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-medium text-[var(--ink)]">
+                    {step}
                   </span>
                 </div>
               ))}
@@ -136,23 +130,23 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-3">
           {[
             {
-              title: "Stock real y actualizado",
+              title: "Stock actualizado",
               text: "Confirmamos disponibilidad antes de coordinar tu envío.",
             },
             {
-              title: "Atención local en Santo Domingo",
-              text: "Cercanía y rapidez en cada coordinación por WhatsApp.",
+              title: "Atención local",
+              text: "Rapidez en cada coordinación por WhatsApp desde Santo Domingo.",
             },
             {
               title: "Envíos a todo Chile",
-              text: "Despachamos a la región que necesites con seguimiento.",
+              text: "Despachamos a cualquier región con seguimiento.",
             },
           ].map((item) => (
             <div key={item.title} className="card p-6">
-              <h3 className="font-[var(--font-display)] text-xl text-[var(--ink)]">
+              <h3 className="font-[var(--font-display)] text-lg text-[var(--ink)]">
                 {item.title}
               </h3>
-              <p className="mt-3 text-sm text-[var(--muted)]">{item.text}</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{item.text}</p>
             </div>
           ))}
         </div>

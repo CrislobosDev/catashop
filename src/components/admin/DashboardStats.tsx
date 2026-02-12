@@ -26,7 +26,7 @@ export default function DashboardStats({ products, orders }: DashboardStatsProps
 
     return (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-[24px] border border-[var(--line)] bg-[var(--surface)] p-6">
+            <div className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-6">
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted)]">

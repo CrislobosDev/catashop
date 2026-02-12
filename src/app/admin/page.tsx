@@ -99,10 +99,10 @@ export default function AdminPage() {
 
   if (!session) {
     return (
-      <section className="min-h-screen flex items-center justify-center p-6 bg-[var(--surface)]">
-        <div className="w-full max-w-md bg-white border border-[var(--line)] rounded-[32px] p-10 shadow-xl">
+      <section className="min-h-screen flex items-center justify-center p-6 bg-[var(--bg)]">
+        <div className="w-full max-w-md bg-[var(--surface)] border border-[var(--line)] rounded-lg p-10 shadow-sm">
           <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-[0.4em] text-[var(--muted)] mb-3">Catashop</p>
+            <p className="text-xs uppercase tracking-[0.15em] text-[var(--muted)] mb-3">Catashop</p>
             <h1 className="font-[var(--font-display)] text-3xl text-[var(--ink)]">Admin</h1>
           </div>
 
@@ -112,21 +112,21 @@ export default function AdminPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
             />
             <input
               type="password"
               placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--accent)] transition-all"
             />
             {authError && (
-              <p className="text-xs uppercase tracking-[0.2em] text-red-600 text-center">{authError}</p>
+              <p className="text-xs uppercase tracking-[0.1em] text-red-600 text-center">{authError}</p>
             )}
             <button
               type="submit"
-              className="w-full bg-[var(--ink)] text-white rounded-full py-4 text-xs uppercase tracking-[0.3em] hover:bg-black transition-colors"
+              className="w-full bg-[var(--accent)] text-white rounded-lg py-4 text-sm font-medium uppercase tracking-[0.1em] hover:bg-[var(--accent-strong)] transition-colors"
             >
               Entrar
             </button>
@@ -137,12 +137,12 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] pb-20">
+    <div className="min-h-screen bg-[var(--bg)] pb-20">
       {/* Navbar */}
-      <header className="sticky top-0 z-30 bg-[var(--surface)]/80 backdrop-blur-md border-b border-[var(--line)] px-6 py-4 transition-colors">
+      <header className="sticky top-0 z-30 bg-[var(--surface)] border-b border-[var(--line)] px-6 py-4">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           <span className="font-[var(--font-display)] text-xl text-[var(--ink)]">Panel de Control</span>
-          <button onClick={signOut} className="flex items-center gap-2 text-xs uppercase tracking-widest text-red-500 hover:text-red-700">
+          <button onClick={signOut} className="flex items-center gap-2 text-xs uppercase tracking-[0.1em] text-red-500 hover:text-red-700">
             <LogOut size={16} />
             <span className="hidden sm:inline">Salir</span>
           </button>
@@ -151,24 +151,24 @@ export default function AdminPage() {
 
       <main className="mx-auto max-w-7xl p-6">
         {/* Tabs */}
-        <div className="flex overflow-x-auto gap-4 mb-10 pb-2 border-b border-[var(--line)]">
+        <div className="flex overflow-x-auto gap-3 mb-10 pb-2 border-b border-[var(--line)]">
           <button
             onClick={() => setActiveTab("dashboard")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest transition-all ${activeTab === "dashboard" ? "bg-[var(--ink)] text-[var(--surface)] shadow-lg" : "text-[var(--muted)] hover:bg-[var(--line)]"}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm uppercase tracking-[0.1em] font-medium transition-all ${activeTab === "dashboard" ? "bg-[var(--accent)] text-white" : "text-[var(--muted)] hover:bg-[var(--sand)]"}`}
           >
             <LayoutDashboard size={16} />
             <span>Dashboard</span>
           </button>
           <button
             onClick={() => setActiveTab("products")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest transition-all ${activeTab === "products" ? "bg-[var(--ink)] text-[var(--surface)] shadow-lg" : "text-[var(--muted)] hover:bg-[var(--line)]"}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm uppercase tracking-[0.1em] font-medium transition-all ${activeTab === "products" ? "bg-[var(--accent)] text-white" : "text-[var(--muted)] hover:bg-[var(--sand)]"}`}
           >
             <Package size={16} />
             <span>Productos</span>
           </button>
           <button
             onClick={() => setActiveTab("orders")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest transition-all ${activeTab === "orders" ? "bg-[var(--ink)] text-[var(--surface)] shadow-lg" : "text-[var(--muted)] hover:bg-[var(--line)]"}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm uppercase tracking-[0.1em] font-medium transition-all ${activeTab === "orders" ? "bg-[var(--accent)] text-white" : "text-[var(--muted)] hover:bg-[var(--sand)]"}`}
           >
             <ShoppingBag size={16} />
             <span>Pedidos</span>

@@ -98,7 +98,7 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
 
     if (orders.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center gap-4 rounded-[28px] border border-dashed border-[var(--line)] p-12 text-[var(--muted)]">
+            <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-[var(--line)] p-12 text-[var(--muted)]">
                 <Package size={32} strokeWidth={1.5} />
                 <p className="text-sm">Aún no hay pedidos registrados.</p>
             </div>
@@ -108,10 +108,10 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-[var(--muted)] uppercase tracking-widest">{orders.length} Pedidos</h3>
+                <h3 className="text-sm font-medium text-[var(--muted)] uppercase tracking-[0.1em]">{orders.length} Pedidos</h3>
                 <button
                     onClick={handleClearAll}
-                    className="flex items-center gap-2 text-xs text-red-500 hover:text-red-700 uppercase tracking-widest"
+                    className="flex items-center gap-2 text-xs text-red-500 hover:text-red-700 uppercase tracking-[0.1em]"
                 >
                     <Trash2 size={14} />
                     Limpiar Todo
@@ -128,38 +128,48 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
             {orders.map((order) => (
                 <div
                     key={order.id}
-                    className={`group rounded-[24px] border bg-[var(--surface)] p-6 transition-all ${order.status === 'sold' ? 'border-green-200 bg-green-50/10' : 'border-[var(--line)] hover:border-[var(--accent)]'}`}
+                    className={`group rounded-lg border bg-[var(--surface)] p-6 transition-all ${order.status === 'sold' ? 'border-green-200 bg-green-50/10' : 'border-[var(--line)] hover:border-[var(--accent)]'}`}
                 >
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--line)] pb-4 mb-4">
-                        <div className="flex items-center gap-3 text-sm text-[var(--muted)]">
-                            <Clock size={16} />
-                            <span>{new Date(order.created_at).toLocaleString("es-CL")}</span>
-                            <span className="font-mono text-xs text-[var(--ink)] bg-[var(--line)] px-2 py-0.5 rounded-md">
-                                #{order.readable_id || order.id.slice(0, 8)}
-                            </span>
-                            {order.status === 'sold' && (
-                                <span className="flex items-center gap-1 text-green-600 bg-green-100 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold">
-                                    <Check size={12} strokeWidth={3} />
-                                    Vendido
+                    <div className="flex flex-col gap-4 border-b border-[var(--line)] pb-4 mb-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--muted)]">
+                                <div className="flex items-center gap-2">
+                                    <Clock size={16} />
+                                    <span>{new Date(order.created_at).toLocaleString("es-CL")}</span>
+                                </div>
+                                <span className="font-mono text-xs text-[var(--ink)] bg-[var(--line)] px-2 py-0.5 rounded-md">
+                                    #{order.readable_id || order.id.slice(0, 8)}
                                 </span>
-                            )}
-                            {order.status === 'new' && (
-                                <span className="text-[var(--accent)] bg-[var(--sand)] px-2 py-0.5 rounded-full text-[10px] uppercase tracking-widest font-bold">
-                                    Nuevo
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <span className="font-[var(--font-display)] text-lg text-[var(--accent-strong)]">
+                                    {formatCLP(order.total)}
                                 </span>
-                            )}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <span className="font-[var(--font-display)] text-lg text-[var(--accent-strong)]">
-                                {formatCLP(order.total)}
-                            </span>
+
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex items-center gap-2">
+                                {order.status === 'sold' && (
+                                    <span className="flex items-center gap-1 text-green-600 bg-green-100 px-3 py-1 rounded-lg text-xs uppercase tracking-[0.1em] font-semibold">
+                                        <Check size={12} strokeWidth={3} />
+                                        Vendido
+                                    </span>
+                                )}
+                                {order.status === 'new' && (
+                                    <span className="text-[var(--accent)] bg-[var(--sand)] px-3 py-1 rounded-lg text-xs uppercase tracking-[0.1em] font-semibold">
+                                        Nuevo
+                                    </span>
+                                )}
+                            </div>
 
                             <div className="flex gap-2">
                                 {order.status !== 'sold' && (
                                     <button
                                         onClick={() => handleMarkAsSold(order)}
                                         disabled={processing === order.id}
-                                        className="bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition-colors disabled:opacity-50"
+                                        className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
                                         title="Marcar como vendido y descontar stock"
                                     >
                                         <Check size={16} />
@@ -167,7 +177,7 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                                 )}
                                 <button
                                     onClick={() => handleDelete(order.id)}
-                                    className="text-[var(--muted)] hover:text-red-500 p-2 border border-[var(--line)] rounded-full hover:bg-red-50 transition-colors"
+                                    className="text-[var(--muted)] hover:text-red-500 p-2 border border-[var(--line)] rounded-lg hover:bg-red-50 transition-colors"
                                     title="Eliminar pedido"
                                 >
                                     <Trash2 size={16} />
@@ -180,23 +190,29 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                         {order.items?.map((item) => (
                             <li
                                 key={`${order.id}-${item.id}`}
-                                className="flex items-center gap-3 bg-[var(--sand)]/30 p-3 rounded-2xl"
+                                className="flex items-center gap-3 bg-[var(--sand)]/30 p-3 rounded-lg"
                             >
                                 {item.image_url ? (
                                     <img
                                         src={item.image_url}
-                                        alt={item.name}
-                                        className="h-10 w-10 rounded-xl object-cover"
+                                        alt=""
+                                        className="h-10 w-10 shrink-0 rounded-lg object-cover bg-[var(--sand)]"
                                         loading="lazy"
                                         referrerPolicy="no-referrer"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                            const placeholder = e.currentTarget.nextElementSibling;
+                                            if (placeholder) placeholder.classList.remove('hidden');
+                                        }}
                                     />
-                                ) : (
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-dashed border-[var(--line)] bg-white text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
+                                ) : null}
+                                {!item.image_url || true ? (
+                                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-[var(--line)] bg-white text-[10px] uppercase tracking-[0.1em] text-[var(--muted)] ${item.image_url ? 'hidden' : ''}`}>
                                         Sin
                                     </div>
-                                )}
-                                <div className="flex flex-col">
-                                    <span className="text-sm font-medium text-[var(--ink)]">{item.name}</span>
+                                ) : null}
+                                <div className="flex flex-col min-w-0 flex-1">
+                                    <span className="text-sm font-medium text-[var(--ink)] truncate">{item.name}</span>
                                     <span className="text-xs text-[var(--muted)]">Cant: {item.quantity}</span>
                                 </div>
                             </li>
