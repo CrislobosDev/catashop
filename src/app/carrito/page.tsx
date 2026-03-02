@@ -58,11 +58,21 @@ export default function CarritoPage() {
       );
 
       if (createOrderError) {
+        const rawMessage = createOrderError.message ?? "";
         logger.warn("checkout.create_order_secure_failed", {
-          message: createOrderError.message,
+          message: rawMessage,
           code: createOrderError.code,
         });
-        setError("No se pudo registrar tu pedido. Intenta nuevamente en unos segundos.");
+
+        if (rawMessage.includes("Could not create order from requested items")) {
+          setError("Tu carrito tiene productos desactualizados. Vacía el carrito y vuelve a agregar los productos.");
+        } else if (rawMessage.includes("Too many checkout attempts")) {
+          setError("Estás intentando muy rápido. Espera unos segundos e inténtalo nuevamente.");
+        } else if (rawMessage.includes("Invalid amount of order items")) {
+          setError("El carrito tiene datos inválidos. Ajusta las cantidades e inténtalo nuevamente.");
+        } else {
+          setError("No se pudo registrar tu pedido. Intenta nuevamente en unos segundos.");
+        }
       } else if (Array.isArray(data) && data.length > 0) {
         const secureOrder = data[0] as CreateOrderSecureResponse;
         finalItems = secureOrder.order_items ?? items;
