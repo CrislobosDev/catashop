@@ -21,6 +21,13 @@ values ('<UUID_DEL_USUARIO_AUTH>')
 on conflict (user_id) do nothing;
 ```
 
+Si ya tenías el proyecto corriendo antes de estos cambios de seguridad, aplica además:
+
+```
+-- Ejecuta el contenido de:
+supabase/policies.sql
+```
+
 ## Variables de entorno
 
 Crea un archivo `.env.local` con:
@@ -52,6 +59,14 @@ npm run dev
 - `npm run format`: autocorrección con ESLint
 - `npm run build`: build de producción
 - `npm run check`: lint + typecheck + build
+
+## Seguridad de pedidos
+
+- El checkout usa la función SQL `create_order_secure` para:
+  - recalcular totales desde precios de base de datos;
+  - normalizar items del pedido;
+  - aplicar rate limit básico por `client_key`.
+- El insert directo público en `orders` quedó deshabilitado por RLS.
 
 ## Notas
 
