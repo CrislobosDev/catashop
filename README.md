@@ -23,6 +23,12 @@ NEXT_PUBLIC_SUPABASE_URL=tu_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
 ```
 
+Tip: puedes copiar la plantilla base:
+
+```
+cp .env.example .env.local
+```
+
 ## Desarrollo
 
 Instala dependencias y ejecuta:
@@ -31,6 +37,14 @@ Instala dependencias y ejecuta:
 npm install
 npm run dev
 ```
+
+## Scripts útiles
+
+- `npm run lint`: reglas ESLint
+- `npm run typecheck`: chequeo de tipos TypeScript
+- `npm run format`: autocorrección con ESLint
+- `npm run build`: build de producción
+- `npm run check`: lint + typecheck + build
 
 ## Notas
 
