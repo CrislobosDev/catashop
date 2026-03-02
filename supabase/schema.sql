@@ -2,6 +2,7 @@ create extension if not exists "pgcrypto";
 
 create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
+  readable_id text,
   name text not null,
   price integer not null,
   stock integer not null default 0,
@@ -38,7 +39,9 @@ using (auth.role() = 'authenticated');
 
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
+  readable_id text,
   items jsonb not null,
+  customer_details jsonb,
   total integer not null,
   status text default 'new',
   created_at timestamptz default now()
