@@ -65,8 +65,12 @@
 - `test: add baseline unit tests for checkout, message format and order payload`
   - Suite mínima sin dependencias externas (`node:test` + compilación TS dedicada).
   - CI ahora ejecuta `npm run test` además de lint/typecheck/build.
+- `test: add checkout smoke for wa.me flow`
+  - Se agregó smoke test del armado de URL de checkout por WhatsApp.
+- `ops: add centralized logger with basic redaction`
+  - Se reemplazaron errores críticos por `logger` para trazabilidad consistente.
 
 ## Próximos pasos inmediatos
-1. Agregar smoke e2e de checkout por WhatsApp.
-2. Incorporar logger centralizado y métricas de errores.
-3. Endurecer CSP removiendo `unsafe-inline`/`unsafe-eval` gradualmente.
+1. Incorporar métricas/telemetría de errores (Sentry o endpoint propio).
+2. Endurecer CSP removiendo `unsafe-inline`/`unsafe-eval` gradualmente.
+3. Expandir smoke e2e en navegador real (Playwright) cuando se habilite dependencia.

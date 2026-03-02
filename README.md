@@ -76,6 +76,11 @@ npm run dev
   - normalizar items del pedido;
   - aplicar rate limit básico por `client_key`.
 - El insert directo público en `orders` quedó deshabilitado por RLS.
+- Existe smoke test del flujo de checkout hacia `wa.me` en `tests/checkout-smoke.test.ts`.
+
+## Logging
+
+- Usa `src/lib/logger.ts` para trazas de error/advertencia con redacción básica de email/teléfono.
 
 ## Notas
 
