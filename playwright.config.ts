@@ -1,12 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const stagingBaseUrl = process.env.STAGING_BASE_URL;
+const useStaging = Boolean(stagingBaseUrl);
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL: useStaging ? stagingBaseUrl : "http://127.0.0.1:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -17,15 +20,17 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
-  webServer: {
-    command: "npm run dev:e2e",
-    url: "http://127.0.0.1:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    env: {
-      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key",
-      NEXT_PUBLIC_OBSERVABILITY_ENABLED: "false",
-    },
-  },
+  webServer: useStaging
+    ? undefined
+    : {
+        command: "npm run dev:e2e",
+        url: "http://127.0.0.1:3000",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+        env: {
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key",
+          NEXT_PUBLIC_OBSERVABILITY_ENABLED: "false",
+        },
+      },
 });
