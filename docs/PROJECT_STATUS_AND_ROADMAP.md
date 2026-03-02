@@ -69,6 +69,11 @@
   - Se agregó smoke test del armado de URL de checkout por WhatsApp.
 - `ops: add centralized logger with basic redaction`
   - Se reemplazaron errores críticos por `logger` para trazabilidad consistente.
+- `security(storage): lock write policies to public.is_admin()`
+  - Upload/update/delete de imágenes en bucket `products` ahora exige admin real.
+- `security(orders): transactional mark sold via RPC`
+  - Se agregó `mark_order_sold_secure` para descontar stock y cerrar orden de forma atómica.
+  - El panel admin dejó de hacer descuento de stock en loop desde cliente.
 
 ## Próximos pasos inmediatos
 1. Incorporar métricas/telemetría de errores (Sentry o endpoint propio).

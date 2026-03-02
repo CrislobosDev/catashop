@@ -75,12 +75,20 @@ npm run dev
   - recalcular totales desde precios de base de datos;
   - normalizar items del pedido;
   - aplicar rate limit básico por `client_key`.
+- La acción de admin para vender una orden usa `mark_order_sold_secure`:
+  - lock transaccional de orden y productos;
+  - validación de stock suficiente antes de descontar;
+  - actualización atómica de stock + estado de orden.
 - El insert directo público en `orders` quedó deshabilitado por RLS.
 - Existe smoke test del flujo de checkout hacia `wa.me` en `tests/checkout-smoke.test.ts`.
 
 ## Logging
 
 - Usa `src/lib/logger.ts` para trazas de error/advertencia con redacción básica de email/teléfono.
+
+## Seguridad de Storage
+
+- Las políticas de `storage.objects` del bucket `products` ahora usan `public.is_admin()` para upload/update/delete.
 
 ## Notas
 
