@@ -69,6 +69,9 @@
   - Se agregó smoke test del armado de URL de checkout por WhatsApp.
 - `ops: add centralized logger with basic redaction`
   - Se reemplazaron errores críticos por `logger` para trazabilidad consistente.
+- `ops: add observability ingest endpoint and webhook forwarding`
+  - Nuevo endpoint `/api/observability` con rate limit por IP.
+  - `logger` envía `warn/error` en producción cuando se habilita por env.
 - `security(storage): lock write policies to public.is_admin()`
   - Upload/update/delete de imágenes en bucket `products` ahora exige admin real.
 - `security(orders): transactional mark sold via RPC`
@@ -76,6 +79,6 @@
   - El panel admin dejó de hacer descuento de stock en loop desde cliente.
 
 ## Próximos pasos inmediatos
-1. Incorporar métricas/telemetría de errores (Sentry o endpoint propio).
-2. Endurecer CSP removiendo `unsafe-inline`/`unsafe-eval` gradualmente.
-3. Expandir smoke e2e en navegador real (Playwright) cuando se habilite dependencia.
+1. Endurecer CSP removiendo `unsafe-inline`/`unsafe-eval` gradualmente.
+2. Expandir smoke e2e en navegador real (Playwright) cuando se habilite dependencia.
+3. Añadir alertas operativas (por volumen de errores) en el webhook/sink elegido.

@@ -49,6 +49,9 @@ Crea un archivo `.env.local` con:
 ```
 NEXT_PUBLIC_SUPABASE_URL=tu_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+NEXT_PUBLIC_OBSERVABILITY_ENABLED=false
+OBSERVABILITY_WEBHOOK_URL=
+OBSERVABILITY_WEBHOOK_TOKEN=
 ```
 
 Tip: puedes copiar la plantilla base:
@@ -99,6 +102,14 @@ npm run dev
 ## Logging
 
 - Usa `src/lib/logger.ts` para trazas de error/advertencia con redacción básica de email/teléfono.
+
+## Observabilidad
+
+- Endpoint interno: `POST /api/observability`.
+- Activación cliente: `NEXT_PUBLIC_OBSERVABILITY_ENABLED=true` (solo recomendado en producción).
+- Si defines `OBSERVABILITY_WEBHOOK_URL`, los eventos `warn/error` se reenvían allí.
+- Si además defines `OBSERVABILITY_WEBHOOK_TOKEN`, se envía en `Authorization: Bearer <token>`.
+- Incluye rate limit básico por IP para evitar abuso.
 
 ## Seguridad de Storage
 
