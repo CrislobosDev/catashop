@@ -26,8 +26,9 @@
 
 ### Procedimiento recomendado
 1. Activar primero en staging con `CSP_ENFORCE_NONCE=true`.
-2. Validar home, productos, carrito, admin, checkout y popup WhatsApp.
-3. Si todo pasa, activar en producción.
+2. Ejecutar workflow `E2E Staging` con input `expect_nonce_csp=true`.
+3. Validar home, productos, carrito, admin, checkout y popup WhatsApp.
+4. Si todo pasa, activar en producción.
 
 ### Rollback inmediato
 1. Cambiar `CSP_ENFORCE_NONCE=false`.
@@ -42,3 +43,4 @@
 - Workflow: `.github/workflows/e2e-staging.yml`.
 - Requiere secret `STAGING_BASE_URL`.
 - Ejecuta smoke browser sin mocks contra staging.
+- Input opcional `expect_nonce_csp=true` valida header CSP en modo nonce estricto.
