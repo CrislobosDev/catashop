@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { logger } from "@/lib/logger";
 
 type ErrorProps = {
   error: Error & { digest?: string };
@@ -9,7 +10,7 @@ type ErrorProps = {
 
 export default function GlobalErrorBoundary({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error("Unhandled app error:", {
+    logger.error("app.unhandled_error", {
       message: error.message,
       digest: error.digest,
       stack: error.stack,

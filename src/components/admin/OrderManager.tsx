@@ -7,6 +7,7 @@ import type { Order } from "@/lib/types";
 import { Package, Clock, CheckCircle, Trash2, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { canUseOptimizedImage } from "@/lib/image";
+import { logger } from "@/lib/logger";
 
 type OrderManagerProps = {
     orders: Order[];
@@ -35,7 +36,11 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                     .single();
 
                 if (fetchError || !productData) {
-                    console.error(`Error fetching product ${item.id}`, fetchError);
+                    logger.warn("admin.order.fetch_product_failed", {
+                        productId: item.id,
+                        message: fetchError?.message,
+                        code: fetchError?.code,
+                    });
                     continue; // Skip if product not found (might rely on ID match)
                 }
 
@@ -47,7 +52,12 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                     .eq("id", item.id);
 
                 if (updateError) {
-                    console.error(`Error updating stock for ${productData.name}`, updateError);
+                    logger.warn("admin.order.update_stock_failed", {
+                        productId: item.id,
+                        productName: productData.name,
+                        message: updateError.message,
+                        code: updateError.code,
+                    });
                 }
             }
 
@@ -63,7 +73,7 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
             onRefresh();
 
         } catch (error) {
-            console.error("Error processing order:", error);
+            logger.error("admin.order.process_failed", error);
             setMessage("Error al procesar la orden.");
         } finally {
             setProcessing(null);

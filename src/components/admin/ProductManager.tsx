@@ -7,6 +7,7 @@ import type { Product } from "@/lib/types";
 import { uploadProductImage } from "@/lib/supabase/storage";
 import { supabase } from "@/lib/supabase/client";
 import { canUseOptimizedImage } from "@/lib/image";
+import { logger } from "@/lib/logger";
 
 type ProductManagerProps = {
     products: Product[];
@@ -154,10 +155,10 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
         }
 
         if (dbError) {
-            console.error("Error al guardar producto keys:", Object.keys(dbError));
-            console.error("Error al guardar producto complete:", JSON.stringify(dbError, null, 2));
             const errorDetails = dbError.message || dbError.details || JSON.stringify(dbError);
-            console.error("Error details:", errorDetails);
+            logger.warn("admin.product.save_failed", {
+                details: errorDetails,
+            });
             setMessage(`Error: ${errorDetails}`);
         } else {
             setMessage(form.id ? "Producto actualizado." : "Producto creado.");

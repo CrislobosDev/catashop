@@ -4,9 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import {
-  buildWhatsAppMessage,
   formatCLP,
-  normalizePhoneToWhatsApp,
 } from "@/lib/format";
 import { supabase } from "@/lib/supabase/client";
 import CheckoutForm from "@/components/CheckoutForm";
@@ -14,6 +12,8 @@ import type { CartItem, CreateOrderSecureResponse, CustomerDetails } from "@/lib
 import { sanitizeCustomerDetails, validateCustomerDetails } from "@/lib/checkout";
 import { getOrCreateCheckoutClientKey, toCheckoutItemPayload } from "@/lib/order";
 import { canUseOptimizedImage } from "@/lib/image";
+import { createWhatsAppCheckoutUrl } from "@/lib/whatsappCheckout";
+import { logger } from "@/lib/logger";
 
 const vendorPhone = "+56932422471";
 
@@ -57,7 +57,10 @@ export default function CarritoPage() {
       );
 
       if (createOrderError) {
-        console.error("Error creando pedido seguro en Supabase:", createOrderError);
+        logger.warn("checkout.create_order_secure_failed", {
+          message: createOrderError.message,
+          code: createOrderError.code,
+        });
       } else if (Array.isArray(data) && data.length > 0) {
         const secureOrder = data[0] as CreateOrderSecureResponse;
         finalItems = secureOrder.order_items ?? items;
@@ -65,11 +68,13 @@ export default function CarritoPage() {
       }
     }
 
-    const message = buildWhatsAppMessage(finalItems, finalTotal, cleanCustomer, orderId);
-    const whatsappPhone = normalizePhoneToWhatsApp(vendorPhone);
-    const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
-      message,
-    )}`;
+    const url = createWhatsAppCheckoutUrl(
+      vendorPhone,
+      finalItems,
+      finalTotal,
+      cleanCustomer,
+      orderId,
+    );
 
     clear();
     window.open(url, "_blank", "noopener,noreferrer");
