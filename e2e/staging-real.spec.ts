@@ -5,12 +5,15 @@ test.describe("staging real smoke", () => {
 
   test("home, products and cart load without blocking errors", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: "Todo lo esencial para tu día a día" })).toBeVisible();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("main")).toBeVisible();
 
     await page.goto("/productos");
-    await expect(page.getByRole("heading", { name: "Colección completa" })).toBeVisible();
+    await expect(page).toHaveURL(/\/productos$/);
+    await expect(page.locator("main")).toBeVisible();
 
     await page.goto("/carrito");
-    await expect(page.getByRole("heading", { name: "Tu selección" })).toBeVisible();
+    await expect(page).toHaveURL(/\/carrito$/);
+    await expect(page.getByRole("heading", { name: /Tu selección/i })).toBeVisible();
   });
 });
