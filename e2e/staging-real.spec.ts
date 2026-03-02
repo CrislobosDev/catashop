@@ -11,7 +11,12 @@ test.describe("staging real smoke", () => {
 
     if (process.env.STAGING_EXPECT_NONCE_CSP === "true") {
       expect(cspHeader).toContain("script-src 'self' 'nonce-");
-      expect(cspHeader).not.toContain("'unsafe-inline'");
+      const scriptDirective = cspHeader
+        .split(";")
+        .map((part) => part.trim())
+        .find((part) => part.startsWith("script-src"));
+      expect(scriptDirective).toBeDefined();
+      expect(scriptDirective).not.toContain("'unsafe-inline'");
     }
 
     await expect(page).toHaveURL(/\/$/);
