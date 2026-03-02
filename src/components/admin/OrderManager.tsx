@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { formatCLP } from "@/lib/format";
 import type { Order } from "@/lib/types";
-import { Package, Clock, CheckCircle, Trash2, AlertTriangle, Check } from "lucide-react";
+import { Package, Clock, CheckCircle, Trash2, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 type OrderManagerProps = {

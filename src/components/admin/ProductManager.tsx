@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Plus, Edit2, Trash2, Image as ImageIcon, Check, X } from "lucide-react";
+import { Search, Edit2, Trash2, Image as ImageIcon, Check, X } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { formatCLP } from "@/lib/format";
 import { uploadProductImage } from "@/lib/supabase/storage";
 import { supabase } from "@/lib/supabase/client";
 
@@ -23,6 +22,19 @@ type ProductFormState = {
     image_url: string;
     is_featured: boolean;
     is_offer: boolean;
+};
+
+type ProductPayload = {
+    name: string;
+    price: number;
+    stock: number;
+    category: string;
+    code: string | null;
+    detail: string;
+    image_url: string | null;
+    is_featured: boolean;
+    is_offer: boolean;
+    readable_id?: string;
 };
 
 const emptyForm: ProductFormState = {
@@ -111,7 +123,7 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
 
         if (!supabase) return;
 
-        const payload: any = {
+        const payload: ProductPayload = {
             name: form.name,
             price: Number(form.price),
             stock: Number(form.stock),
@@ -123,12 +135,12 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
             is_offer: form.is_offer,
         };
 
-        let dbError;
+        let dbError: { message?: string; details?: string | null } | null = null;
 
         if (form.id) {
             // Update existing
             const { error } = await supabase.from("products").update(payload).eq("id", form.id);
-            dbError = error;
+            dbError = error ? { message: error.message, details: error.details } : null;
         } else {
             // Create new
             // Generate readable_id if not present
@@ -136,14 +148,13 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
             payload.readable_id = readable_id;
 
             const { error } = await supabase.from("products").insert(payload);
-            dbError = error;
+            dbError = error ? { message: error.message, details: error.details } : null;
         }
 
         if (dbError) {
             console.error("Error al guardar producto keys:", Object.keys(dbError));
             console.error("Error al guardar producto complete:", JSON.stringify(dbError, null, 2));
-            // @ts-ignore
-            const errorDetails = dbError?.message || dbError?.details || JSON.stringify(dbError);
+            const errorDetails = dbError.message || dbError.details || JSON.stringify(dbError);
             console.error("Error details:", errorDetails);
             setMessage(`Error: ${errorDetails}`);
         } else {

@@ -5,20 +5,22 @@ import { useEffect, useState } from "react";
 const storageKey = "catashop-theme";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem(storageKey) as "light" | "dark" | null;
+    if (stored) return stored;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  });
 
   useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as "light" | "dark" | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial = stored ?? (prefersDark ? "dark" : "light");
-    document.documentElement.dataset.theme = initial;
-    setTheme(initial);
-  }, []);
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem(storageKey, theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light";
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem(storageKey, next);
     setTheme(next);
   };
 

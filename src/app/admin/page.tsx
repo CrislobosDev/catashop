@@ -48,6 +48,12 @@ export default function AdminPage() {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(Boolean(newSession));
+        if (newSession) {
+          void loadData();
+        } else {
+          setProducts([]);
+          setOrders([]);
+        }
       },
     );
 
@@ -55,12 +61,6 @@ export default function AdminPage() {
       listener?.subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    if (session) {
-      loadData();
-    }
-  }, [session]);
 
   const signIn = async (event: React.FormEvent) => {
     event.preventDefault();

@@ -24,14 +24,16 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const storageKey = "aurora-cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
+  const [items, setItems] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") return [];
     const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      setItems(JSON.parse(stored));
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored) as CartItem[];
+    } catch {
+      return [];
     }
-  }, []);
+  });
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(items));

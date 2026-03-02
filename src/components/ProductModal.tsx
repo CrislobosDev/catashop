@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import type { Product } from "@/lib/types";
 import { formatCLP } from "@/lib/format";
@@ -33,10 +33,11 @@ const canUseNextImage = (imageUrl: string) => {
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
   const { addItem } = useCart();
-  const [mounted, setMounted] = useState(false);
+  const canRenderPortal = typeof document !== "undefined";
 
   useEffect(() => {
-    setMounted(true);
+    if (!canRenderPortal) return;
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -49,9 +50,9 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, [canRenderPortal, onClose]);
 
-  if (!mounted) return null;
+  if (!canRenderPortal) return null;
 
   return createPortal(
     <div
