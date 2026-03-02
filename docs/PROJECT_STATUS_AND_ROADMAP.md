@@ -48,9 +48,11 @@
   - Se añadieron headers de hardening en `next.config.ts`.
 - `security: validate and sanitize checkout customer data`
   - Validación y saneo del checkout antes de persistir y enviar por WhatsApp.
+- `security(db): enforce admin-only RLS via admin_users table`
+  - Se reemplazó control por `authenticated` con control por `admin_users` + `is_admin()`.
 
 ## Próximos pasos inmediatos
-1. Endurecer RLS para admin real (no solo `authenticated`).
-2. Agregar anti-abuse para creación de órdenes públicas.
-3. Mejorar integridad de precios/totales (recalcular server-side en Supabase).
-4. Arrancar Sprint 2 con mejoras de performance (`next/image`) y accesibilidad.
+1. Agregar anti-abuse para creación de órdenes públicas.
+2. Mejorar integridad de precios/totales (recalcular server-side en Supabase).
+3. Arrancar Sprint 2 con mejoras de performance (`next/image`) y accesibilidad.
+4. Iniciar Sprint 3: tests base + CI.
