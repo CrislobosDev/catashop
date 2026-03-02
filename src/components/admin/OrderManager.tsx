@@ -26,48 +26,11 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
         if (!supabase) return;
 
         try {
-            // 1. Deduct stock for each item
-            for (const item of order.items) {
-                // Get current stock
-                const { data: productData, error: fetchError } = await supabase
-                    .from("products")
-                    .select("stock, name")
-                    .eq("id", item.id)
-                    .single();
-
-                if (fetchError || !productData) {
-                    logger.warn("admin.order.fetch_product_failed", {
-                        productId: item.id,
-                        message: fetchError?.message,
-                        code: fetchError?.code,
-                    });
-                    continue; // Skip if product not found (might rely on ID match)
-                }
-
-                const newStock = Math.max(0, productData.stock - item.quantity);
-
-                const { error: updateError } = await supabase
-                    .from("products")
-                    .update({ stock: newStock })
-                    .eq("id", item.id);
-
-                if (updateError) {
-                    logger.warn("admin.order.update_stock_failed", {
-                        productId: item.id,
-                        productName: productData.name,
-                        message: updateError.message,
-                        code: updateError.code,
-                    });
-                }
-            }
-
-            // 2. Update order status
-            const { error: orderError } = await supabase
-                .from("orders")
-                .update({ status: "sold" })
-                .eq("id", order.id);
-
-            if (orderError) throw orderError;
+            const { error: rpcError } = await supabase.rpc(
+                "mark_order_sold_secure",
+                { p_order_id: order.id },
+            );
+            if (rpcError) throw rpcError;
 
             setMessage("Orden marcada como vendida y stock actualizado.");
             onRefresh();
