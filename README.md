@@ -52,6 +52,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
 NEXT_PUBLIC_OBSERVABILITY_ENABLED=false
 OBSERVABILITY_WEBHOOK_URL=
 OBSERVABILITY_WEBHOOK_TOKEN=
+OBS_ALERT_THRESHOLD=20
+CSP_ENFORCE_NONCE=false
+STAGING_BASE_URL=
 ```
 
 Tip: puedes copiar la plantilla base:
@@ -117,6 +120,7 @@ npm run dev
 - Si defines `OBSERVABILITY_WEBHOOK_URL`, los eventos `warn/error` se reenvían allí.
 - Si además defines `OBSERVABILITY_WEBHOOK_TOKEN`, se envía en `Authorization: Bearer <token>`.
 - Incluye rate limit básico por IP para evitar abuso.
+- Incluye alerta por ráfaga de errores (`OBS_ALERT_THRESHOLD` en ventana de 5 min).
 
 ## Seguridad de Storage
 
@@ -126,7 +130,7 @@ npm run dev
 
 - `script-src` no permite `unsafe-eval`.
 - `unsafe-inline` se mantiene habilitado por compatibilidad con runtime de Next.js.
-- Próxima fase recomendada: nonce/hash strategy para retirar `unsafe-inline` sin romper hidratación.
+- Ya existe estrategia nonce por middleware con rollout controlado por `CSP_ENFORCE_NONCE`.
 
 ## Notas
 
@@ -137,3 +141,4 @@ npm run dev
 ## Estado y roadmap técnico
 
 - Revisa `docs/PROJECT_STATUS_AND_ROADMAP.md` para el estado actual, riesgos y plan de mejora por sprints.
+- Runbook operativo: `docs/OPERATIONS_RUNBOOK.md`.

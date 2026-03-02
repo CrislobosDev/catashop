@@ -74,6 +74,13 @@
 - `ops: add observability ingest endpoint and webhook forwarding`
   - Nuevo endpoint `/api/observability` con rate limit por IP.
   - `logger` envía `warn/error` en producción cuando se habilita por env.
+- `ops: add error burst alerting and operations runbook`
+  - Se agregó umbral de alerta por ráfaga de errores (`OBS_ALERT_THRESHOLD`).
+  - Runbook operativo para observabilidad, CSP rollout y e2e staging.
+- `security(csp): add nonce rollout strategy via middleware`
+  - CSP dinámica por request en middleware con `x-nonce` y toggle `CSP_ENFORCE_NONCE`.
+- `test(e2e): add staging real smoke path`
+  - Workflow manual `e2e-staging` con `STAGING_BASE_URL` por secret.
 - `security(storage): lock write policies to public.is_admin()`
   - Upload/update/delete de imágenes en bucket `products` ahora exige admin real.
 - `security(orders): transactional mark sold via RPC`
@@ -81,6 +88,6 @@
   - El panel admin dejó de hacer descuento de stock en loop desde cliente.
 
 ## Próximos pasos inmediatos
-1. Endurecer CSP retirando `unsafe-inline` con estrategia nonce/hash.
-2. Añadir alertas operativas (por volumen de errores) en el webhook/sink elegido.
-3. Agregar e2e con datos reales de staging (sin mocks) para flujo completo.
+1. Ejecutar rollout real de `CSP_ENFORCE_NONCE=true` primero en staging y luego producción.
+2. Conectar webhook de observabilidad a herramienta de alertas (Slack/PagerDuty/Email).
+3. Expandir e2e staging para incluir checkout real controlado (dataset aislado).

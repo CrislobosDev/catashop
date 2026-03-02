@@ -10,8 +10,10 @@ type IngestPayload = {
 };
 
 const ipBucket = new Map<string, { count: number; resetAt: number }>();
+const errorBurstBucket = new Map<string, { count: number; resetAt: number; alerted: boolean }>();
 const WINDOW_MS = 60_000;
 const MAX_EVENTS_PER_WINDOW = 60;
+const ALERT_WINDOW_MS = 5 * 60_000;
 
 const truncate = (value: string, max: number) => value.slice(0, max);
 
@@ -84,22 +86,59 @@ export async function POST(request: NextRequest) {
 
   const webhookUrl = process.env.OBSERVABILITY_WEBHOOK_URL;
   const webhookToken = process.env.OBSERVABILITY_WEBHOOK_TOKEN;
+  const alertThreshold = Number(process.env.OBS_ALERT_THRESHOLD ?? "20");
+
+  const forwardToWebhook = async (body: Record<string, unknown>) => {
+    if (!webhookUrl) return;
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(webhookToken ? { Authorization: `Bearer ${webhookToken}` } : {}),
+      },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
+  };
 
   if (webhookUrl) {
     try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(webhookToken ? { Authorization: `Bearer ${webhookToken}` } : {}),
-        },
-        body: JSON.stringify({
-          source: "catashop-web",
-          ...payload,
-          ip,
-        }),
-        cache: "no-store",
+      await forwardToWebhook({
+        source: "catashop-web",
+        type: "event",
+        ...payload,
+        ip,
       });
+
+      if (payload.level === "error" && alertThreshold > 0) {
+        const key = `${payload.message}:${payload.path ?? "-"}`;
+        const now = Date.now();
+        const current = errorBurstBucket.get(key);
+        if (!current || now > current.resetAt) {
+          errorBurstBucket.set(key, {
+            count: 1,
+            resetAt: now + ALERT_WINDOW_MS,
+            alerted: false,
+          });
+        } else {
+          current.count += 1;
+          if (!current.alerted && current.count >= alertThreshold) {
+            current.alerted = true;
+            await forwardToWebhook({
+              source: "catashop-web",
+              type: "alert",
+              alert: "error_burst_threshold_reached",
+              threshold: alertThreshold,
+              observedCount: current.count,
+              windowMs: ALERT_WINDOW_MS,
+              message: payload.message,
+              path: payload.path,
+              lastIp: ip,
+              lastTimestamp: payload.timestamp,
+            });
+          }
+        }
+      }
     } catch {
       // Fallback local server log if external sink fails.
       console.error("observability.forward_failed", {

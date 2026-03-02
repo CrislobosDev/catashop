@@ -1,0 +1,44 @@
+# Catashop Operations Runbook
+
+## Observability
+
+### Variables
+- `NEXT_PUBLIC_OBSERVABILITY_ENABLED=true`: habilita envío de `warn/error` desde navegador a `/api/observability`.
+- `OBSERVABILITY_WEBHOOK_URL`: destino HTTP para eventos y alertas.
+- `OBSERVABILITY_WEBHOOK_TOKEN`: bearer token opcional del webhook.
+- `OBS_ALERT_THRESHOLD=20`: cantidad de errores iguales en 5 minutos para disparar alerta.
+
+### Tipos de eventos enviados
+- `type: "event"`: evento individual (`warn` o `error`).
+- `type: "alert"`: alerta de ráfaga de errores (`error_burst_threshold_reached`).
+
+### Verificación rápida
+1. Levantar app con observabilidad habilitada.
+2. Generar un `logger.error(...)` manual.
+3. Confirmar recepción en el webhook.
+4. Repetir error >= `OBS_ALERT_THRESHOLD` dentro de 5 min y verificar `type: "alert"`.
+
+## CSP Nonce Rollout
+
+### Variables
+- `CSP_ENFORCE_NONCE=false` (por defecto): modo compatible (`script-src 'unsafe-inline'`).
+- `CSP_ENFORCE_NONCE=true`: activa política nonce en `script-src`.
+
+### Procedimiento recomendado
+1. Activar primero en staging con `CSP_ENFORCE_NONCE=true`.
+2. Validar home, productos, carrito, admin, checkout y popup WhatsApp.
+3. Si todo pasa, activar en producción.
+
+### Rollback inmediato
+1. Cambiar `CSP_ENFORCE_NONCE=false`.
+2. Redeploy.
+
+## E2E
+
+### CI pull requests
+- Job `e2e-smoke` ejecuta Playwright con mocks (`checkout` y `admin`).
+
+### Staging real (manual)
+- Workflow: `.github/workflows/e2e-staging.yml`.
+- Requiere secret `STAGING_BASE_URL`.
+- Ejecuta smoke browser sin mocks contra staging.
