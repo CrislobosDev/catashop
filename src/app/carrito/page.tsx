@@ -47,15 +47,32 @@ export default function CarritoPage() {
 
     // Guardamos por RPC segura y solo continuamos si persiste correctamente.
     if (supabase) {
-      const { data, error: createOrderError } = await supabase.rpc(
+      const rpcPayload = {
+        p_items: toCheckoutItemPayload(items),
+        p_customer_details: cleanCustomer,
+        p_readable_id: orderId,
+        p_client_key: getOrCreateCheckoutClientKey(),
+      };
+
+      let { data, error: createOrderError } = await supabase.rpc(
         "create_order_secure",
-        {
-          p_items: toCheckoutItemPayload(items),
-          p_customer_details: cleanCustomer,
-          p_readable_id: orderId,
-          p_client_key: getOrCreateCheckoutClientKey(),
-        },
+        rpcPayload,
       );
+
+      // Compatibilidad temporal con DB antigua que aún no tiene p_client_key.
+      if (
+        createOrderError &&
+        (createOrderError.code === "42703" ||
+          (createOrderError.message ?? "").includes("p_client_key"))
+      ) {
+        const fallback = await supabase.rpc("create_order_secure", {
+          p_items: rpcPayload.p_items,
+          p_customer_details: rpcPayload.p_customer_details,
+          p_readable_id: rpcPayload.p_readable_id,
+        });
+        data = fallback.data;
+        createOrderError = fallback.error;
+      }
 
       if (createOrderError) {
         const rawMessage = createOrderError.message ?? "";
