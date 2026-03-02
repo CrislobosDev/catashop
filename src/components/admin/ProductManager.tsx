@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Search, Edit2, Trash2, Image as ImageIcon, Check, X } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { uploadProductImage } from "@/lib/supabase/storage";
 import { supabase } from "@/lib/supabase/client";
+import { canUseOptimizedImage } from "@/lib/image";
 
 type ProductManagerProps = {
     products: Product[];
@@ -247,7 +249,12 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                     <div className="border border-dashed border-[var(--line)] rounded-lg p-6 text-center">
                         {form.image_url ? (
                             <div className="relative w-32 h-32 mx-auto mb-4">
-                                <img src={form.image_url} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                                {canUseOptimizedImage(form.image_url) ? (
+                                    <Image src={form.image_url} alt="Preview" fill className="w-full h-full object-cover rounded-lg" />
+                                ) : (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={form.image_url} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                                )}
                                 <button type="button" onClick={() => setForm({ ...form, image_url: "" })} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><X size={12} /></button>
                             </div>
                         ) : (
@@ -312,7 +319,12 @@ export default function ProductManager({ products, onRefresh }: ProductManagerPr
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden shrink-0">
                                         {product.image_url ? (
-                                            <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                                            canUseOptimizedImage(product.image_url) ? (
+                                                <Image src={product.image_url} alt={product.name} width={48} height={48} className="w-full h-full object-cover" />
+                                            ) : (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                                            )
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-[var(--muted)]"><ImageIcon size={16} /></div>
                                         )}

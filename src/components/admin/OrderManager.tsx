@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { formatCLP } from "@/lib/format";
 import type { Order } from "@/lib/types";
 import { Package, Clock, CheckCircle, Trash2, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { canUseOptimizedImage } from "@/lib/image";
 
 type OrderManagerProps = {
     orders: Order[];
@@ -193,18 +195,29 @@ export default function OrderManager({ orders, onRefresh }: OrderManagerProps) {
                                 className="flex items-center gap-3 bg-[var(--sand)]/30 p-3 rounded-lg"
                             >
                                 {item.image_url ? (
-                                    <img
-                                        src={item.image_url}
-                                        alt=""
-                                        className="h-10 w-10 shrink-0 rounded-lg object-cover bg-[var(--sand)]"
-                                        loading="lazy"
-                                        referrerPolicy="no-referrer"
-                                        onError={(e) => {
-                                            e.currentTarget.style.display = 'none';
-                                            const placeholder = e.currentTarget.nextElementSibling;
-                                            if (placeholder) placeholder.classList.remove('hidden');
-                                        }}
-                                    />
+                                    canUseOptimizedImage(item.image_url) ? (
+                                        <Image
+                                            src={item.image_url}
+                                            alt={item.name}
+                                            width={40}
+                                            height={40}
+                                            className="h-10 w-10 shrink-0 rounded-lg object-cover bg-[var(--sand)]"
+                                        />
+                                    ) : (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            src={item.image_url}
+                                            alt={item.name}
+                                            className="h-10 w-10 shrink-0 rounded-lg object-cover bg-[var(--sand)]"
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display = 'none';
+                                                const placeholder = e.currentTarget.nextElementSibling;
+                                                if (placeholder) placeholder.classList.remove('hidden');
+                                            }}
+                                        />
+                                    )
                                 ) : null}
                                 {!item.image_url || true ? (
                                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-[var(--line)] bg-white text-[10px] uppercase tracking-[0.1em] text-[var(--muted)] ${item.image_url ? 'hidden' : ''}`}>

@@ -1,48 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { Product } from "@/lib/types";
 import { formatCLP } from "@/lib/format";
 import { useCart } from "@/components/CartContext";
+import { canUseOptimizedImage } from "@/lib/image";
 
 type ProductModalProps = {
   product: Product;
   onClose: () => void;
 };
 
-const supabaseHost = (() => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!url) return null;
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return null;
-  }
-})();
-
-const canUseNextImage = (imageUrl: string) => {
-  try {
-    const host = new URL(imageUrl).hostname;
-    return supabaseHost ? host === supabaseHost : false;
-  } catch {
-    return false;
-  }
-};
-
 export default function ProductModal({ product, onClose }: ProductModalProps) {
   const { addItem } = useCart();
   const canRenderPortal = typeof document !== "undefined";
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!canRenderPortal) return;
+
+    const dialogNode = dialogRef.current;
+    dialogNode?.focus();
 
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
+      }
+
+      if (event.key === "Tab" && dialogNode) {
+        const focusables = dialogNode.querySelectorAll<HTMLElement>(
+          'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -60,15 +63,18 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="product-modal-title"
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className="w-full max-w-3xl overflow-hidden rounded-[28px] border border-[var(--line)] bg-[var(--surface)] shadow-[0_30px_80px_var(--shadow)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="grid gap-6 p-6 md:grid-cols-[1.1fr_0.9fr]">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[20px] bg-[var(--sand)]">
             {product.image_url ? (
-              canUseNextImage(product.image_url) ? (
+              canUseOptimizedImage(product.image_url) ? (
                 <Image
                   src={product.image_url}
                   alt={product.name}
@@ -76,6 +82,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                   className="object-cover"
                 />
               ) : (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={product.image_url}
                   alt={product.name}
@@ -96,7 +103,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
                   {product.category}
                 </p>
-                <h3 className="font-[var(--font-display)] text-2xl text-[var(--ink)]">
+                <h3 id="product-modal-title" className="font-[var(--font-display)] text-2xl text-[var(--ink)]">
                   {product.name}
                 </h3>
               </div>

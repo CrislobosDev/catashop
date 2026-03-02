@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import {
   buildWhatsAppMessage,
@@ -12,6 +13,7 @@ import CheckoutForm from "@/components/CheckoutForm";
 import type { CartItem, CreateOrderSecureResponse, CustomerDetails } from "@/lib/types";
 import { sanitizeCustomerDetails, validateCustomerDetails } from "@/lib/checkout";
 import { getOrCreateCheckoutClientKey, toCheckoutItemPayload } from "@/lib/order";
+import { canUseOptimizedImage } from "@/lib/image";
 
 const vendorPhone = "+56932422471";
 
@@ -124,13 +126,24 @@ export default function CarritoPage() {
                   >
                     <div className="flex items-center gap-4">
                       {item.image_url ? (
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="h-16 w-16 rounded-[18px] object-cover"
-                          loading="lazy"
-                          referrerPolicy="no-referrer"
-                        />
+                        canUseOptimizedImage(item.image_url) ? (
+                          <Image
+                            src={item.image_url}
+                            alt={item.name}
+                            width={64}
+                            height={64}
+                            className="h-16 w-16 rounded-[18px] object-cover"
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="h-16 w-16 rounded-[18px] object-cover"
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                          />
+                        )
                       ) : (
                         <div className="flex h-16 w-16 items-center justify-center rounded-[18px] border border-dashed border-[var(--line)] text-[10px] uppercase tracking-[0.2em] text-[var(--muted)]">
                           Sin imagen
@@ -147,7 +160,11 @@ export default function CarritoPage() {
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                       <div className="flex flex-col items-center gap-2">
+                        <label htmlFor={`quantity-${item.id}`} className="sr-only">
+                          Cantidad de {item.name}
+                        </label>
                         <input
+                          id={`quantity-${item.id}`}
                           type="number"
                           min={1}
                           max={item.stock}

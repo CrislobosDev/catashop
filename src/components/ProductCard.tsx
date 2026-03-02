@@ -5,29 +5,11 @@ import Image from "next/image";
 import type { Product } from "@/lib/types";
 import { formatCLP } from "@/lib/format";
 import { useCart } from "@/components/CartContext";
+import { canUseOptimizedImage } from "@/lib/image";
 
 type ProductCardProps = {
   product: Product;
   onView: (product: Product) => void;
-};
-
-const supabaseHost = (() => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!url) return null;
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return null;
-  }
-})();
-
-const canUseNextImage = (imageUrl: string) => {
-  try {
-    const host = new URL(imageUrl).hostname;
-    return supabaseHost ? host === supabaseHost : false;
-  } catch {
-    return false;
-  }
 };
 
 export default function ProductCard({ product, onView }: ProductCardProps) {
@@ -52,7 +34,7 @@ export default function ProductCard({ product, onView }: ProductCardProps) {
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--sand)]">
         {product.image_url ? (
-          canUseNextImage(product.image_url) ? (
+          canUseOptimizedImage(product.image_url) ? (
             <Image
               src={product.image_url}
               alt={product.name}
@@ -60,6 +42,7 @@ export default function ProductCard({ product, onView }: ProductCardProps) {
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={product.image_url}
               alt={product.name}
