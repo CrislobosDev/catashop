@@ -117,10 +117,9 @@ npm run dev
 
 ## CSP hardening
 
-- `script-src` ya no permite `unsafe-eval` ni `unsafe-inline`.
-- Si en despliegue detectas bloqueo de scripts por CSP, rollback inmediato:
-  - restaura temporalmente `'unsafe-inline'` en `script-src` de `next.config.ts`;
-  - despliega y revisa violaciones antes de reaplicar endurecimiento.
+- `script-src` no permite `unsafe-eval`.
+- `unsafe-inline` se mantiene habilitado por compatibilidad con runtime de Next.js.
+- Próxima fase recomendada: nonce/hash strategy para retirar `unsafe-inline` sin romper hidratación.
 
 ## Notas
 
