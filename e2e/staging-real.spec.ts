@@ -6,7 +6,11 @@ test.describe("staging real smoke", () => {
   test("home, products and cart load without blocking errors", async ({ page }) => {
     const homeResponse = await page.goto("/");
     expect(homeResponse).not.toBeNull();
-    const cspHeader = homeResponse?.headers()["content-security-policy"] ?? "";
+    let cspHeader = homeResponse?.headers()["content-security-policy"] ?? "";
+    if (!cspHeader) {
+      const fallbackResponse = await page.request.get("/");
+      cspHeader = fallbackResponse.headers()["content-security-policy"] ?? "";
+    }
     expect(cspHeader).toContain("default-src 'self'");
 
     if (process.env.STAGING_EXPECT_NONCE_CSP === "true") {
