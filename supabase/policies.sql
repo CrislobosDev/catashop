@@ -203,3 +203,163 @@ $$;
 
 revoke all on function public.create_order_secure(jsonb, jsonb, text, text) from public;
 grant execute on function public.create_order_secure(jsonb, jsonb, text, text) to anon, authenticated;
+
+create or replace function public.mark_order_sold_secure(p_order_id uuid)
+returns table(order_id uuid, new_status text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_current_status text;
+  v_items_count integer;
+  v_products_count integer;
+begin
+  if not public.is_admin() then
+    raise exception 'Forbidden';
+  end if;
+
+  select status
+  into v_current_status
+  from public.orders
+  where id = p_order_id
+  for update;
+
+  if not found then
+    raise exception 'Order not found';
+  end if;
+
+  if v_current_status = 'sold' then
+    return query
+    select p_order_id, v_current_status;
+    return;
+  end if;
+
+  with requested as (
+    select
+      (value ->> 'id')::uuid as product_id,
+      greatest(1, least(coalesce((value ->> 'quantity')::integer, 1), 9999)) as quantity
+    from public.orders o
+    cross join jsonb_array_elements(o.items) as value
+    where o.id = p_order_id
+  ),
+  collapsed as (
+    select product_id, sum(quantity)::integer as quantity
+    from requested
+    where product_id is not null
+    group by product_id
+  )
+  select count(*)::integer
+  into v_items_count
+  from collapsed;
+
+  if coalesce(v_items_count, 0) = 0 then
+    raise exception 'Order has no valid items';
+  end if;
+
+  with requested as (
+    select
+      (value ->> 'id')::uuid as product_id,
+      greatest(1, least(coalesce((value ->> 'quantity')::integer, 1), 9999)) as quantity
+    from public.orders o
+    cross join jsonb_array_elements(o.items) as value
+    where o.id = p_order_id
+  ),
+  collapsed as (
+    select product_id, sum(quantity)::integer as quantity
+    from requested
+    where product_id is not null
+    group by product_id
+  ),
+  locked_products as (
+    select p.id
+    from public.products p
+    join collapsed c on c.product_id = p.id
+    for update
+  )
+  select count(*)::integer
+  into v_products_count
+  from locked_products;
+
+  if v_products_count <> v_items_count then
+    raise exception 'Order references missing products';
+  end if;
+
+  if exists (
+    with requested as (
+      select
+        (value ->> 'id')::uuid as product_id,
+        greatest(1, least(coalesce((value ->> 'quantity')::integer, 1), 9999)) as quantity
+      from public.orders o
+      cross join jsonb_array_elements(o.items) as value
+      where o.id = p_order_id
+    ),
+    collapsed as (
+      select product_id, sum(quantity)::integer as quantity
+      from requested
+      where product_id is not null
+      group by product_id
+    )
+    select 1
+    from collapsed c
+    join public.products p on p.id = c.product_id
+    where p.stock < c.quantity
+  ) then
+    raise exception 'Insufficient stock for one or more products';
+  end if;
+
+  with requested as (
+    select
+      (value ->> 'id')::uuid as product_id,
+      greatest(1, least(coalesce((value ->> 'quantity')::integer, 1), 9999)) as quantity
+    from public.orders o
+    cross join jsonb_array_elements(o.items) as value
+    where o.id = p_order_id
+  ),
+  collapsed as (
+    select product_id, sum(quantity)::integer as quantity
+    from requested
+    where product_id is not null
+    group by product_id
+  )
+  update public.products p
+  set stock = p.stock - c.quantity
+  from collapsed c
+  where p.id = c.product_id;
+
+  update public.orders
+  set status = 'sold'
+  where id = p_order_id;
+
+  return query
+  select p_order_id, 'sold'::text;
+end;
+$$;
+
+revoke all on function public.mark_order_sold_secure(uuid) from public;
+grant execute on function public.mark_order_sold_secure(uuid) to authenticated;
+
+drop policy if exists "Public read product images" on storage.objects;
+drop policy if exists "Admin upload product images" on storage.objects;
+drop policy if exists "Admin update product images" on storage.objects;
+drop policy if exists "Admin delete product images" on storage.objects;
+
+create policy "Public read product images"
+on storage.objects
+for select
+using (bucket_id = 'products');
+
+create policy "Admin upload product images"
+on storage.objects
+for insert
+with check (bucket_id = 'products' and public.is_admin());
+
+create policy "Admin update product images"
+on storage.objects
+for update
+using (bucket_id = 'products' and public.is_admin());
+
+create policy "Admin delete product images"
+on storage.objects
+for delete
+using (bucket_id = 'products' and public.is_admin());
