@@ -62,8 +62,11 @@
 - `ops: add CI workflow and global error boundary`
   - Se agregó pipeline de calidad en GitHub Actions.
   - Se añadió `src/app/error.tsx` para manejo global de errores en runtime.
+- `test: add baseline unit tests for checkout, message format and order payload`
+  - Suite mínima sin dependencias externas (`node:test` + compilación TS dedicada).
+  - CI ahora ejecuta `npm run test` además de lint/typecheck/build.
 
 ## Próximos pasos inmediatos
-1. Iniciar Sprint 3: tests base (carrito + formateo de mensaje).
-2. Agregar smoke e2e de checkout por WhatsApp.
-3. Incorporar logger centralizado y métricas de errores.
+1. Agregar smoke e2e de checkout por WhatsApp.
+2. Incorporar logger centralizado y métricas de errores.
+3. Endurecer CSP removiendo `unsafe-inline`/`unsafe-eval` gradualmente.

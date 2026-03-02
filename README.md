@@ -57,7 +57,7 @@ npm run dev
 - `npm run lint`: reglas ESLint
 - `npm run typecheck`: chequeo de tipos TypeScript
 - `npm run format`: autocorrección con ESLint
-- `npm run test`: placeholder temporal (pendiente suite real)
+- `npm run test`: tests unitarios base (Node test runner + TypeScript)
 - `npm run build`: build de producción
 - `npm run check`: lint + typecheck + build
 
