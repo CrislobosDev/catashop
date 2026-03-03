@@ -22,7 +22,11 @@ export default function ProductGrid({
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
     const load = async () => {
+      if (!isMounted) return;
       setLoading(true);
       setError(null);
 
@@ -32,28 +36,57 @@ export default function ProductGrid({
         return;
       }
 
-      let query = supabase.from("products").select("*").order("created_at", {
-        ascending: false,
-      });
+      timeoutId = setTimeout(() => {
+        if (!isMounted) return;
+        setError("No se pudieron cargar los productos. Revisa la conexión e inténtalo nuevamente.");
+        setLoading(false);
+      }, 15_000);
 
-      if (mode === "featured") {
-        query = query.eq("is_featured", true);
-      }
-      if (mode === "offers") {
-        query = query.eq("is_offer", true);
-      }
+      try {
+        let query = supabase.from("products").select("*").order("created_at", {
+          ascending: false,
+        });
 
-      const { data, error: queryError } = await query;
+        if (mode === "featured") {
+          query = query.eq("is_featured", true);
+        }
+        if (mode === "offers") {
+          query = query.eq("is_offer", true);
+        }
 
-      if (queryError) {
+        const { data, error: queryError } = await query;
+        if (!isMounted) return;
+
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+
+        if (queryError) {
+          setError("No se pudieron cargar los productos.");
+        } else {
+          setProducts((data ?? []) as Product[]);
+        }
+        setLoading(false);
+      } catch {
+        if (!isMounted) return;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
         setError("No se pudieron cargar los productos.");
-      } else {
-        setProducts((data ?? []) as Product[]);
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     load();
+
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [mode]);
 
   const filteredProducts = useMemo(() => {
