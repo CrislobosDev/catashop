@@ -32,4 +32,5 @@ jobs:
         env:
           STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
           STAGING_EXPECT_NONCE_CSP: ${{ github.event.inputs.expect_nonce_csp == 'true' && 'true' || 'false' }}
+          REQUIRE_CSP_HEADER: "true"
         run: npm run e2e:staging

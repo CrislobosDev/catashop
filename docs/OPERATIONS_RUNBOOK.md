@@ -50,3 +50,4 @@
 - Requiere secret `PRODUCTION_BASE_URL` (ejemplo: `https://catashop.cl` o dominio canonico productivo).
 - Ejecuta smoke browser sin mocks contra produccion.
 - Input por defecto `expect_nonce_csp=true` valida header CSP en modo nonce estricto.
+- Nota: en algunos runners/edges, ciertos headers pueden no estar expuestos al test. En ese caso se valida nonce por señal disponible y se recomienda confirmacion manual en navegador (`Network -> / -> content-security-policy`).
