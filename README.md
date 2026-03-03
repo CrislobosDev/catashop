@@ -96,7 +96,7 @@ npm run dev
   - lint
   - typecheck
   - build
-  - smoke e2e Playwright (`chromium`)
+  - smoke e2e Playwright determinista de rutas core (`e2e/ci-smoke.spec.ts`)
 - Workflow manual staging: `.github/workflows/e2e-staging.yml` (secret `STAGING_BASE_URL`).
 - Workflow manual produccion: `.github/workflows/e2e-production.yml` (secret `PRODUCTION_BASE_URL`).
 - Workflow manual checkout real: `.github/workflows/e2e-checkout-real.yml` (secret `STAGING_BASE_URL`).
