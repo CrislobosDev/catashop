@@ -88,6 +88,6 @@
   - El panel admin dejó de hacer descuento de stock en loop desde cliente.
 
 ## Próximos pasos inmediatos
-1. Ejecutar `E2E Production` con validacion nonce (`expect_nonce_csp=true`) y dejar evidencia de release.
-2. Conectar webhook de observabilidad a herramienta de alertas (Slack/PagerDuty/Email).
-3. Expandir e2e real para incluir checkout controlado con dataset aislado de pruebas.
+1. Implementar ingestion real de reportes CSP (`report-uri` / `report-to`) y alerta accionable.
+2. Agregar E2E admin real controlado con dataset QA aislado.
+3. Definir budget de performance por ruta en CI (umbral y falla automatica).

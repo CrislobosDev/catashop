@@ -7,6 +7,9 @@
 - E2E Checkout Real en verde.
 - Observability Smoke en verde.
 - Baseline etiquetada: `v1.0.0-hardening`.
+- Dashboard admin mejorado con KPIs clickeables y graficos simples.
+- Politica de cambios/garantias visible en FAQ y checkout.
+- Navegacion sin recarga visual brusca entre paginas internas.
 
 ## Lo que ya se profesionalizo
 1. Seguridad de pedidos (RPC segura + total server-side).
@@ -47,3 +50,8 @@
 - P1: E2E admin real controlado con dataset QA aislado.
 - P1: performance budget por ruta en CI.
 - P2: mejoras de accesibilidad avanzada y auditoria automatica.
+
+## Cierre de sesion (resumen rapido)
+1. Se estabilizo y limpio CI/E2E para uso diario sin friccion.
+2. Se profesionalizo UX comercial (politica clara para vendedor).
+3. Se mejoro operacion admin con visibilidad de negocio en dashboard.
