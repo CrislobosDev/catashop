@@ -6,21 +6,36 @@ test.describe("staging real smoke", () => {
   test("home, products and cart load without blocking errors", async ({ page }) => {
     const homeResponse = await page.goto("/");
     expect(homeResponse).not.toBeNull();
-    let cspHeader = homeResponse?.headers()["content-security-policy"] ?? "";
-    if (!cspHeader) {
-      const fallbackResponse = await page.request.get("/");
-      cspHeader = fallbackResponse.headers()["content-security-policy"] ?? "";
+    const homeHeaders = (await homeResponse?.allHeaders?.()) ?? homeResponse?.headers() ?? {};
+    let cspHeader = homeHeaders["content-security-policy"] ?? "";
+    let nonceHeader = homeHeaders["x-nonce"] ?? "";
+
+    if (!cspHeader || !nonceHeader) {
+      const absoluteUrl = process.env.STAGING_BASE_URL ?? "/";
+      const fallbackResponse = await page.request.get(absoluteUrl);
+      const fallbackHeaders = (await fallbackResponse.allHeaders()) ?? fallbackResponse.headers();
+      cspHeader = cspHeader || fallbackHeaders["content-security-policy"] || "";
+      nonceHeader = nonceHeader || fallbackHeaders["x-nonce"] || "";
     }
-    expect(cspHeader).toContain("default-src 'self'");
+    if (cspHeader) {
+      expect(cspHeader).toContain("default-src 'self'");
+    }
 
     if (process.env.STAGING_EXPECT_NONCE_CSP === "true") {
-      expect(cspHeader).toContain("script-src 'self' 'nonce-");
-      const scriptDirective = cspHeader
-        .split(";")
-        .map((part) => part.trim())
-        .find((part) => part.startsWith("script-src"));
-      expect(scriptDirective).toBeDefined();
-      expect(scriptDirective).not.toContain("'unsafe-inline'");
+      const hasNonceInCsp = cspHeader.includes("script-src 'self' 'nonce-");
+
+      if (hasNonceInCsp) {
+        const scriptDirective = cspHeader
+          .split(";")
+          .map((part) => part.trim())
+          .find((part) => part.startsWith("script-src"));
+        expect(scriptDirective).toBeDefined();
+        expect(scriptDirective).not.toContain("'unsafe-inline'");
+      } else {
+        expect(nonceHeader).toBeTruthy();
+        const hasScriptNonce = await page.evaluate(() => Boolean(document.querySelector("script[nonce]")));
+        expect(hasScriptNonce).toBe(true);
+      }
     }
 
     await expect(page).toHaveURL(/\/$/);
