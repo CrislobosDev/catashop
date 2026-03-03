@@ -9,16 +9,23 @@ test.describe("checkout real smoke", () => {
     const main = page.locator("main");
     await expect(main).toBeVisible();
 
-    const addButtons = page.getByRole("button", { name: /Agregar al Carrito/i });
-    await expect(addButtons.first()).toBeVisible({ timeout: 45_000 });
-    await addButtons.first().click();
+    const productCards = page.locator("article[role='button']");
+    await expect(productCards.first()).toBeVisible({ timeout: 45_000 });
+    await productCards.first().click();
+
+    const productDialog = page.getByRole("dialog");
+    await expect(productDialog).toBeVisible();
+    await productDialog
+      .getByRole("button", { name: /Agregar al carrito/i })
+      .click();
+    await productDialog.getByRole("button", { name: /Cerrar/i }).click();
 
     await page.goto("/carrito");
     await expect(page).toHaveURL(/\/carrito$/);
 
     const continueButton = page.getByRole("button", { name: /Continuar Compra/i });
     await expect(continueButton).toBeVisible();
-    await expect(continueButton).toBeEnabled();
+    await expect(continueButton).toBeEnabled({ timeout: 15_000 });
     await continueButton.click();
 
     await expect(page.getByRole("heading", { name: /Datos de Envío/i })).toBeVisible();
