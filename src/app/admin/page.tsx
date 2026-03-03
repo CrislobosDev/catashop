@@ -37,8 +37,17 @@ export default function AdminPage() {
         setLoading(false);
         return;
       }
-      const { data } = await supabase.auth.getSession();
-      setSession(Boolean(data.session));
+      try {
+        const sessionResult = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise<null>((resolve) => {
+            setTimeout(() => resolve(null), 4000);
+          }),
+        ]);
+        setSession(Boolean(sessionResult?.data.session));
+      } catch {
+        setSession(false);
+      }
       setLoading(false);
     };
 

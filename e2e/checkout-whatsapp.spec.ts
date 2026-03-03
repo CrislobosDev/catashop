@@ -36,7 +36,9 @@ test("smoke checkout opens WhatsApp popup after secure order registration", asyn
   await page.goto("/carrito");
   await expect(page.getByRole("heading", { name: "Tu selección" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Continuar Compra" }).click();
+  const continueButton = page.getByRole("button", { name: "Continuar Compra" });
+  await expect(continueButton).toBeEnabled({ timeout: 15_000 });
+  await continueButton.click();
   await expect(page.getByRole("heading", { name: "Datos de Envío" })).toBeVisible();
 
   await page.getByLabel("Nombre Completo").fill("Usuario E2E");

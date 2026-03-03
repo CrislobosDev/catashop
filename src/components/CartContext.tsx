@@ -25,22 +25,26 @@ const storageKey = "aurora-cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);
-    if (!stored) return;
-    try {
-      setItems(JSON.parse(stored) as CartItem[]);
-    } catch {
-      setItems([]);
+    if (stored) {
+      try {
+        setItems(JSON.parse(stored) as CartItem[]);
+      } catch {
+        setItems([]);
+      }
     }
+    setHydrated(true);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
+    if (!hydrated) return;
     localStorage.setItem(storageKey, JSON.stringify(items));
-  }, [items]);
+  }, [items, hydrated]);
 
   const addItem = (product: Product) => {
     setItems((prev) => {

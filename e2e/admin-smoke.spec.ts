@@ -39,30 +39,41 @@ const mockOrder = {
 test("admin smoke: login and mark order as sold", async ({ page }) => {
   let markSoldRpcCalled = false;
 
-  await page.route("**/auth/v1/token?grant_type=password", async (route) => {
+  await page.route("**/auth/v1/**", async (route) => {
+    const url = route.request().url();
+    if (url.includes("grant_type=password")) {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          access_token: "fake-access-token",
+          token_type: "bearer",
+          expires_in: 3600,
+          refresh_token: "fake-refresh-token",
+          user: {
+            id: "55555555-5555-5555-5555-555555555555",
+            aud: "authenticated",
+            role: "authenticated",
+            email: "admin@catashop.cl",
+          },
+        }),
+      });
+      return;
+    }
+
+    if (url.endsWith("/user")) {
+      await route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "JWT expired" }),
+      });
+      return;
+    }
+
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({
-        access_token: "fake-access-token",
-        token_type: "bearer",
-        expires_in: 3600,
-        refresh_token: "fake-refresh-token",
-        user: {
-          id: "55555555-5555-5555-5555-555555555555",
-          aud: "authenticated",
-          role: "authenticated",
-          email: "admin@catashop.cl",
-        },
-      }),
-    });
-  });
-
-  await page.route("**/auth/v1/user", async (route) => {
-    await route.fulfill({
-      status: 401,
-      contentType: "application/json",
-      body: JSON.stringify({ message: "JWT expired" }),
+      body: JSON.stringify({}),
     });
   });
 
