@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="border-t border-[var(--line)] bg-[var(--surface)]">
@@ -12,7 +14,9 @@ export default function Footer() {
           </p>
         </div>
         <div className="text-xs uppercase tracking-[0.3em] flex flex-col md:flex-row gap-4 md:gap-8">
-          <a href="/faq" className="hover:text-[var(--accent-strong)] transition-colors">Preguntas Frecuentes</a>
+          <Link href="/faq" className="hover:text-[var(--accent-strong)] transition-colors">
+            Preguntas Frecuentes
+          </Link>
           <span>Santo Domingo · Chile · CLP</span>
         </div>
       </div>
