@@ -18,6 +18,14 @@
 3. Confirmar recepción en el webhook.
 4. Repetir error >= `OBS_ALERT_THRESHOLD` dentro de 5 min y verificar `type: "alert"`.
 
+### Smoke automatizado
+- Workflow: `.github/workflows/observability-smoke.yml`.
+- Input `target`:
+  - `staging` usa secret `STAGING_BASE_URL`.
+  - `production` usa secret `PRODUCTION_BASE_URL`.
+- Resultado esperado: `Observability smoke OK` y status `204`.
+- Verificación adicional: revisar en tu destino `OBSERVABILITY_WEBHOOK_URL` que llegue `type: "event"` con `source: "catashop-web"`.
+
 ## CSP Nonce Rollout
 
 ### Variables

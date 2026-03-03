@@ -84,6 +84,7 @@ npm run dev
 - `npm run e2e:checkout-real`: smoke real no destructivo (agregar al carrito y abrir formulario)
 - `npm run e2e:headed`: smoke e2e en modo visible
 - `npm run e2e:install`: instala browser Chromium para Playwright
+- `npm run obs:smoke`: smoke de `/api/observability` (requiere `OBS_BASE_URL`)
 - `npm run build`: build de producción
 - `npm run check`: lint + typecheck + build
 
@@ -98,6 +99,7 @@ npm run dev
 - Workflow manual staging: `.github/workflows/e2e-staging.yml` (secret `STAGING_BASE_URL`).
 - Workflow manual produccion: `.github/workflows/e2e-production.yml` (secret `PRODUCTION_BASE_URL`).
 - Workflow manual checkout real: `.github/workflows/e2e-checkout-real.yml` (secret `STAGING_BASE_URL`).
+- Workflow manual observabilidad: `.github/workflows/observability-smoke.yml` (`STAGING_BASE_URL`/`PRODUCTION_BASE_URL`).
 
 ## Seguridad de pedidos
 

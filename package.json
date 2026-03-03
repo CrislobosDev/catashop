@@ -18,6 +18,7 @@
     "e2e:checkout-real": "playwright test e2e/checkout-real.spec.ts --project=chromium",
     "e2e:headed": "playwright test --headed",
     "e2e:install": "playwright install chromium",
+    "obs:smoke": "node scripts/observability-smoke.mjs",
     "check": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {

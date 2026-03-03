@@ -1,0 +1,36 @@
+name: Observability Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Entorno objetivo para /api/observability"
+        type: choice
+        required: true
+        default: staging
+        options:
+          - staging
+          - production
+
+jobs:
+  observability-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Select target base URL
+        run: |
+          if [ "${{ github.event.inputs.target }}" = "production" ]; then
+            echo "OBS_BASE_URL=${{ secrets.PRODUCTION_BASE_URL }}" >> "$GITHUB_ENV"
+          else
+            echo "OBS_BASE_URL=${{ secrets.STAGING_BASE_URL }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Run observability smoke
+        run: npm run obs:smoke
