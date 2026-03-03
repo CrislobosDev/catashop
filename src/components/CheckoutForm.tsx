@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import type { CustomerDetails } from "@/lib/types";
 import {
     sanitizeCustomerDetails,
@@ -156,6 +157,19 @@ export default function CheckoutForm({
                         {submitError}
                     </p>
                 )}
+                <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] px-4 py-3 text-xs leading-relaxed text-[var(--muted)]">
+                    <p>
+                        Cambios/devoluciones por gusto personal no aplican. Si hay falla de fabricación,
+                        puedes solicitar revisión dentro de 10 días corridos desde la recepción.
+                    </p>
+                    <p className="mt-1">
+                        Revisa detalle completo en{" "}
+                        <Link href="/faq" className="text-[var(--ink)] underline underline-offset-2 hover:text-[var(--accent-strong)]">
+                            Preguntas Frecuentes
+                        </Link>
+                        .
+                    </p>
+                </div>
                 <p className="text-center text-xs text-[var(--muted)]">
                     Total a confirmar: <span className="text-[var(--ink)] font-bold">{total}</span>
                 </p>
