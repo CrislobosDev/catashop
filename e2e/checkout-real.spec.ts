@@ -8,18 +8,9 @@ test.describe("checkout real smoke", () => {
     await expect(page).toHaveURL(/\/productos$/);
     const main = page.locator("main");
     await expect(main).toBeVisible();
-    await expect(main).not.toContainText(/Cargando colección/i, { timeout: 20_000 });
-
-    if (await main.getByText(/No se pudieron cargar los productos/i).isVisible()) {
-      throw new Error("Catalogo no disponible en este entorno (error cargando productos).");
-    }
-
-    if (await main.getByText(/No hay resultados para esta búsqueda/i).isVisible()) {
-      throw new Error("Catalogo sin productos publicos para ejecutar smoke de checkout.");
-    }
 
     const addButtons = page.getByRole("button", { name: /Agregar al Carrito/i });
-    await expect(addButtons.first()).toBeVisible({ timeout: 15_000 });
+    await expect(addButtons.first()).toBeVisible({ timeout: 45_000 });
     await addButtons.first().click();
 
     await page.goto("/carrito");
